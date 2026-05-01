@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 const navItems = [
   { label: "Dashboard", icon: "dashboard", to: "/company-dashboard" },
   { label: "My Deals", icon: "handshake", to: "/company-deals", active: true },
-  { label: "Distributions", icon: "payments", href: "#" },
+  { label: "Distributions", icon: "payments", to: "/company-distributions" },
   { label: "Wallet", icon: "account_balance_wallet", href: "#" },
-  { label: "Profile", icon: "person", href: "#" },
+  { label: "Profile", icon: "person", to:"/profile" },
 ];
 
 const filters = ["ALL", "DRAFT", "OPEN", "FUNDED", "PENDING_REVIEW"];
@@ -161,16 +161,7 @@ return deals.filter((deal) => deal.status === activeFilter);
               Company Workspace
             </h1>
 
-            <div className="hidden lg:flex items-center bg-surface-container rounded-full px-4 py-1.5 w-80">
-              <span className="material-symbols-outlined text-outline text-sm">
-                search
-              </span>
-              <input
-                className="bg-transparent border-none focus:ring-0 text-sm placeholder:text-outline w-full ml-2"
-                placeholder="Search deals, documents, or reports..."
-                type="text"
-              />
-            </div>
+           
           </div>
 
           <div className="flex items-center gap-3 md:gap-4">
@@ -185,13 +176,7 @@ return deals.filter((deal) => deal.status === activeFilter);
             <div className="hidden md:block h-6 w-[1px] bg-outline-variant mx-1"></div>
 
          
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
-              <img
-                className="w-full h-full object-cover"
-                alt="company manager"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4dDl4AccmZwNqsRvM-jDEoMC-GwjJ32s8jznqzJFdO627el3gvQrwBV2tlJYvuM09IbLpevF53I5lmz4a0doPcjXBzja_e3Dh7fZq896SSqLaHQ5PyA6KT6Cxg2NxwREYYMNimY5JdCOPwBG8KVwMA1mHed7HxZ2eUxs5PBzNZRKdJZkCrUuyPajjLe-PQJjeOO4Ss6ctJAMhJs8GX_0j4U2-GFQRky75R-iqwBQK_Y0ANzfXuJx56tiggjBDS9J0TI0aKaFMO7X-"
-              />
-            </div>
+           
           </div>
         </header>
 
@@ -207,10 +192,13 @@ return deals.filter((deal) => deal.status === activeFilter);
               
             </div>
 
-            <button className="px-6 py-3 bg-primary-container text-white rounded-xl font-semibold shadow-lg shadow-primary/10 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 w-fit">
-              <span className="material-symbols-outlined">add</span>
-              Create New Deal
-            </button>
+           <Link
+  to="/company-create-deal"
+  className="px-6 py-3 bg-primary-container text-white rounded-xl font-semibold shadow-lg shadow-primary/10 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 w-fit"
+>
+  <span className="material-symbols-outlined">add</span>
+  Create New Deal
+</Link>
           </section>
 
 

@@ -1,51 +1,52 @@
 import React from "react";
-import { useEffect, useState , useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+const navItems = [
+  { label: "Dashboard", icon: "dashboard", to: "/company-dashboard", active: true },
+  { label: "My Deals", icon: "handshake", to: "/company-deals" },
+  { label: "Distributions", icon: "payments", to: "/company-distributions" },
+  { label: "Wallet", icon: "account_balance_wallet", to: "/company-wallet" },
+  { label: "Profile", icon: "person", to: "/profile" },
+];
 
 export default function BusinessDashboard() {
   const [deals, setDeals] = useState([]);
 
- useEffect(() => {
-  const fetchDeals = async () => {
-    try {
-      const res = await axios.get( 
-        "http://localhost:5000/deals/mydeals",
-        {
-          withCredentials: true
-        }
-      );
-            console.log("DEALS FROM BACKEND:", res.data.deals); // 👈 ADD THIS
+  useEffect(() => {
+    const fetchDeals = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/deals/mydeals", {
+          withCredentials: true,
+        });
+        console.log("DEALS FROM BACKEND:", res.data.deals);
+        setDeals(res.data.deals);
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
+    fetchDeals();
+  }, []);
 
-      setDeals(res.data.deals);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  fetchDeals();
-}, []);
-
-const totalRaised = deals.reduce((sum, deal) => {
+ const totalRaised = deals.reduce((sum, deal) => {
   const raw = deal.fundingProgress?.amountRaised;
 
-  const value =
-    raw?.$numberDecimal ?? // Mongo raw format
-    raw ??                // already number/string
-    0;
+  const value = raw?.$numberDecimal
+    ? parseFloat(raw.$numberDecimal)
+    : Number(raw || 0);
 
-  return sum + Number(value);
+  return sum + value;
 }, 0);
 
-
-
+const totalInvestors = deals.reduce((sum, deal) => {
+  return sum + Number(deal.fundingProgress?.investorCount || 0);
+}, 0);
 
   return (
-    
-    <div className="bg-surface text-on-surface flex">
-      <aside className="h-screen w-64 border-r border-slate-200 bg-[#f3f4f6] flex flex-col p-4 gap-2 shrink-0">
+    <div className="bg-surface text-on-surface flex min-h-screen">
+      <aside className="hidden lg:flex h-screen w-64 border-r border-slate-200 bg-[#f3f4f6] flex-col p-4 gap-2 shrink-0 sticky top-0">
         <div className="mb-8 px-2">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center">
@@ -65,57 +66,20 @@ const totalRaised = deals.reduce((sum, deal) => {
         </div>
 
         <nav className="flex-1 space-y-1">
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 bg-white text-emerald-700 shadow-sm rounded-lg transition-transform duration-200"
-            href="#"
-          >
-            <span className="material-symbols-outlined">dashboard</span>
-            <span className="font-medium text-sm">Dashboard</span>
-          </a>
-
-
-      
-
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-            href="#"
-          >
-            <span className="material-symbols-outlined">handshake</span>
+          {navItems.map((item) => (
             <Link
-        to="/company-deals"
-        className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-      >
-        <span className="font-medium text-sm">My Deals</span>
-      </Link>
-          </a>
-
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-            href="#"
-          >
-            <span className="material-symbols-outlined">payments</span>
-            <span className="font-medium text-sm">Distributions</span>
-          </a>
-
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-            href="#"
-          >
-            <span className="material-symbols-outlined">
-              account_balance_wallet
-            </span>
-            <span className="font-medium text-sm">Wallet</span>
-          </a>
-
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-            href="#"
-          >
-            <span className="material-symbols-outlined">person</span>
-            <span className="font-medium text-sm">Profile</span>
-          </a>
-
-        
+              key={item.label}
+              to={item.to}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-transform duration-200 ${
+                item.active
+                  ? "bg-white text-emerald-700 shadow-sm"
+                  : "text-slate-600 hover:bg-slate-200/50 hover:translate-x-1"
+              }`}
+            >
+              <span className="material-symbols-outlined">{item.icon}</span>
+              <span className="font-medium text-sm">{item.label}</span>
+            </Link>
+          ))}
         </nav>
 
         <div className="mt-auto border-t border-slate-200/50 pt-4">
@@ -129,48 +93,28 @@ const totalRaised = deals.reduce((sum, deal) => {
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col relative min-w-0 h-screen overflow-y-auto">
-        <header className="sticky top-0 w-full z-50 h-16 px-8 flex justify-between items-center bg-white/70 backdrop-blur-xl border-b border-slate-200/50 shadow-sm">
-          <div className="flex items-center gap-8">
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 manrope">
+      <main className="flex-1 flex flex-col min-w-0">
+        <header className="sticky top-0 w-full z-40 h-16 px-4 md:px-8 flex justify-between items-center bg-white/70 backdrop-blur-xl border-b border-slate-200/50 shadow-sm">
+          <div className="flex items-center gap-8 min-w-0">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 font-headline whitespace-nowrap">
               Company Workspace
             </h1>
-
-            <div className="hidden lg:flex items-center bg-surface-container rounded-full px-4 py-1.5 w-80">
-              <span className="material-symbols-outlined text-outline text-sm">
-                search
-              </span>
-              <input
-                className="bg-transparent border-none focus:ring-0 text-sm placeholder:text-outline w-full ml-2"
-                placeholder="Search listings, investors, or reports..."
-                type="text"
-              />
-            </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
             <button className="p-2 text-slate-500 hover:text-slate-900 transition-colors">
               <span className="material-symbols-outlined">notifications</span>
             </button>
 
-            <button className="p-2 text-slate-500 hover:text-slate-900 transition-colors">
+            <button className="hidden sm:inline-flex p-2 text-slate-500 hover:text-slate-900 transition-colors">
               <span className="material-symbols-outlined">help_outline</span>
             </button>
 
-            <div className="h-6 w-[1px] bg-outline-variant mx-2"></div>
-
-            
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
-              <img
-                className="w-full h-full object-cover"
-                alt="company manager"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4dDl4AccmZwNqsRvM-jDEoMC-GwjJ32s8jznqzJFdO627el3gvQrwBV2tlJYvuM09IbLpevF53I5lmz4a0doPcjXBzja_e3Dh7fZq896SSqLaHQ5PyA6KT6Cxg2NxwREYYMNimY5JdCOPwBG8KVwMA1mHed7HxZ2eUxs5PBzNZRKdJZkCrUuyPajjLe-PQJjeOO4Ss6ctJAMhJs8GX_0j4U2-GFQRky75R-iqwBQK_Y0ANzfXuJx56tiggjBDS9J0TI0aKaFMO7X-"
-              />
-            </div>
+            <div className="hidden md:block h-6 w-[1px] bg-outline-variant mx-1"></div>
           </div>
         </header>
 
-        <div className="p-8 space-y-8">
+        <div className="p-4 md:p-8 space-y-8">
           <div className="flex items-end justify-between">
             <div>
               <span className="text-on-surface-variant text-sm font-medium tracking-wide">
@@ -181,14 +125,7 @@ const totalRaised = deals.reduce((sum, deal) => {
               </h2>
             </div>
 
-            <div className="flex gap-3">
-              <div className="px-4 py-2 bg-surface-container-low rounded-xl flex items-center gap-2 text-on-surface-variant border border-outline-variant/10">
-                <span className="material-symbols-outlined text-sm">
-                  calendar_today
-                </span>
-                <span className="text-sm font-medium">Oct 1 - Oct 31, 2023</span>
-              </div>
-            </div>
+           
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -197,10 +134,9 @@ const totalRaised = deals.reduce((sum, deal) => {
                 Total Capital Raised
               </span>
               <div className="flex items-baseline gap-2 mt-2">
-               <span className="text-3xl font-bold text-primary manrope">
-  ${totalRaised.toLocaleString()}
-  
-</span> 
+                <span className="text-3xl font-bold text-primary manrope">
+                  ${totalRaised.toLocaleString()}
+                </span>
               </div>
               <div className="mt-4 w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
                 <div className="h-full bg-secondary w-[78%]"></div>
@@ -213,13 +149,13 @@ const totalRaised = deals.reduce((sum, deal) => {
               </span>
               <div className="flex items-baseline gap-2 mt-2">
                 <span className="text-3xl font-bold text-primary manrope">
-  {deals?.[0]?.fundingProgress?.investorCount || 0}
-</span>
+                  {totalInvestors}
+
+                </span>
                 <span className="text-secondary text-xs font-bold flex items-center">
                   <span className="material-symbols-outlined text-[14px] mr-1">
                     add
                   </span>
-                  
                 </span>
               </div>
               <div className="flex -space-x-2 mt-4 overflow-hidden">
@@ -246,12 +182,9 @@ const totalRaised = deals.reduce((sum, deal) => {
 
             <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0_8px_32px_rgba(24,28,30,0.04)] flex flex-col gap-1 border border-outline-variant/5">
               <span className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider">
-  {deals.length} Active Deals
-</span>
-              <div className="flex items-baseline gap-2 mt-2">
-                
-                
-              </div>
+                {deals.length} Active Deals
+              </span>
+              <div className="flex items-baseline gap-2 mt-2"></div>
               <div className="mt-4 flex gap-1">
                 <div className="h-1 flex-1 bg-secondary rounded-full"></div>
                 <div className="h-1 flex-1 bg-secondary rounded-full"></div>
@@ -259,8 +192,6 @@ const totalRaised = deals.reduce((sum, deal) => {
                 <div className="h-1 flex-1 bg-surface-container rounded-full"></div>
               </div>
             </div>
-
-            
           </div>
 
           <div className="grid grid-cols-12 gap-8">
@@ -325,11 +256,7 @@ const totalRaised = deals.reduce((sum, deal) => {
               </div>
             </div>
 
-            <div className="col-span-12 lg:col-span-4 space-y-8">
-              
-
-              
-            </div>
+            <div className="col-span-12 lg:col-span-4 space-y-8"></div>
           </div>
 
           <div className="grid grid-cols-12 gap-8 pb-12">
@@ -458,53 +385,46 @@ const totalRaised = deals.reduce((sum, deal) => {
               </thead>
 
               <tbody className="divide-y divide-outline-variant/10">
-  {deals.map((deal) => {
-    const amountRaised = Number(
-      deal.fundingProgress?.amountRaised?.$numberDecimal || 0
-    );
+                {deals.map((deal) => {
+                  const amountRaised = Number(
+                    deal.fundingProgress?.amountRaised?.$numberDecimal || 0
+                  );
 
-    const percentage = deal.fundingProgress?.percentageRaised || 0;
-    const investors = deal.fundingProgress?.investorCount || 0;
+                  const percentage = deal.fundingProgress?.percentageRaised || 0;
+                  const investors = deal.fundingProgress?.investorCount || 0;
 
-    return (
-      <tr key={deal._id} className="hover:bg-surface-container-low/50 transition-colors">
-        {/* NAME */}
-        <td className="px-8 py-6">
-          <p className="font-semibold text-primary">
-            {deal.title}
-          </p>
-        </td>
+                  return (
+                    <tr
+                      key={deal._id}
+                      className="hover:bg-surface-container-low/50 transition-colors"
+                    >
+                      <td className="px-8 py-6">
+                        <p className="font-semibold text-primary">
+                          {deal.title}
+                        </p>
+                      </td>
 
-        {/* STATUS */}
-        <td className="px-8 py-6 text-sm font-medium">
-          {deal.status}
-        </td>
+                      <td className="px-8 py-6 text-sm font-medium">
+                        {deal.status}
+                      </td>
 
-        {/* UTILIZATION */}
-        <td className="px-8 py-6">
-          <div className="flex items-center gap-4">
-            
-            <span className="text-sm font-bold">
-              {percentage}%
-            </span>
-          </div>
-        </td>
+                      <td className="px-8 py-6">
+                        <div className="flex items-center gap-4">
+                          <span className="text-sm font-bold">
+                            {percentage}%
+                          </span>
+                        </div>
+                      </td>
 
-        {/* AMOUNT RAISED */}
-        <td className="px-8 py-6 text-sm font-bold text-secondary">
-          ${amountRaised.toLocaleString()}
-        </td>
+                      <td className="px-8 py-6 text-sm font-bold text-secondary">
+                        ${amountRaised.toLocaleString()}
+                      </td>
 
-        {/* INVESTORS */}
-        <td className="px-8 py-6">
-          {investors}
-        </td>
-
-      
-      </tr>
-    );
-  })}
-</tbody>
+                      <td className="px-8 py-6">{investors}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         </div>
