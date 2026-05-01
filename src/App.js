@@ -1,19 +1,12 @@
-import { Routes, Route } from "react-router-dom";
-import Login from "./pages/authentication/Login";
-
-import InvestorDashboard from "./pages/investor/InvestorDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPendingDeals from "./pages/admin/AdminPendingDeals";
-import CompanyDashboard from "./pages/company/CompanyDashboard";
 import AdminPendingCompanies from "./pages/admin/AdminPendingCompanies";
 import AdminKYCReview from "./pages/admin/AdminKYCReview";
 import AdminAuditLogs from "./pages/admin/AdminAuditLogs";
-import Portfolio from "./pages/investor/Portfolio";
 import CompanyDashboard from "./pages/company/CompanyDashboard";
 import Create_Deal from "./pages/company/Create_Deal";
 import Deals from "./pages/company/Deals";
 import Distribution from "./pages/company/Distribution";
-import Wallet from "./pages/company/Wallet";
 import Create_Distribution from "./pages/company/Create_Distribution";
 import UserProfile from "./pages/Profile.jsx";
 
@@ -39,7 +32,8 @@ import DealDetails from "./pages/investor/DealDetails";
 import ExploreDeals from "./pages/investor/ExploreDeals";
 import InvestorDashboard from "./pages/investor/InvestorDashboard";
 import Portfolio from "./pages/investor/Portfolio";
-import Wallet from "./pages/investor/Wallet"
+import Wallet from "./pages/investor/Wallet";
+import CompanyWallet from "./pages/company/Wallet.jsx";
 import ProfileSetting from "./pages/investor/ProfileSettings";
 
 export default function App() {
@@ -58,7 +52,7 @@ export default function App() {
       <Route path="/company-create-deal" element={<Create_Deal />} />
       <Route path="/company-distributions" element={<Distribution />} />
       <Route path="/company-create-distribution" element={<Create_Distribution />} />
-      <Route path="/company-wallet" element={<Wallet />} />
+      <Route path="/company-wallet" element={<CompanyWallet />} />
             <Route path="/profile" element={<UserProfile />} />
 
       
