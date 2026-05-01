@@ -81,7 +81,7 @@ export default function Login() {
       localStorage.setItem("role", normalizedRole);
 
       if (normalizedRole === "INVESTOR") {
-        navigate("/investor-dashboard"); ///////////
+        navigate("/InvestorDashboard"); ///////////
       } else if (normalizedRole === "ADMIN") {
         navigate("/admin-dashboard"); ///////////
       } else if (normalizedRole === "BUSINESS_OWNER") {

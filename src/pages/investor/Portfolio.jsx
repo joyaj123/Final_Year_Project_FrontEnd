@@ -49,7 +49,7 @@ export default function Portfolio() {
 
         <nav className="flex-1 space-y-1">
           <Link
-            to="/dashboard"
+            to="/InvestorDashboard"
             className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
           >
             <span className="material-symbols-outlined">dashboard</span>
@@ -127,9 +127,6 @@ export default function Portfolio() {
               <h1 className="mb-2 text-4xl font-extrabold tracking-tight text-primary">
                 Investment Portfolio
               </h1>
-              <p className="font-medium text-on-surface-variant">
-                Asset distribution and performance analytics for Q3 2024.
-              </p>
             </div>
           </header>
 
