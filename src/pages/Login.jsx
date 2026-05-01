@@ -48,7 +48,7 @@ export default function Login() {
       else if (normalizedRole === "ADMIN") {
         navigate("/admin-dashboard");
       } 
-      else if (normalizedRole === "COMPANY") {
+      else if (normalizedRole === "BUSINESS_OWNER") {
         navigate("/company-dashboard");
       } 
       else {
