@@ -143,7 +143,7 @@ export default function ExploreDeals() {
 
         <nav className="flex-1 space-y-1">
           <Link
-            to="/dashboard"
+            to="/InvestorDashboard"
             className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
           >
             <span className="material-symbols-outlined">dashboard</span>
@@ -209,8 +209,6 @@ export default function ExploreDeals() {
             <button className="p-2 text-slate-500 hover:text-slate-900 transition-colors">
               <span className="material-symbols-outlined">help_outline</span>
             </button>
-
-           
           </div>
         </header>
 
@@ -220,6 +218,7 @@ export default function ExploreDeals() {
               <span className="text-on-surface-variant text-sm font-medium tracking-wide">
                 INVESTMENT MARKETPLACE
               </span>
+
               <h2 className="text-3xl font-extrabold text-primary manrope -mt-1">
                 Explore Deals
               </h2>
@@ -230,6 +229,7 @@ export default function ExploreDeals() {
                 <span className="material-symbols-outlined text-sm">
                   verified
                 </span>
+
                 <span className="text-sm font-medium">
                   Approved opportunities only
                 </span>
@@ -251,6 +251,7 @@ export default function ExploreDeals() {
                 <span className="material-symbols-outlined text-red-600">
                   error
                 </span>
+
                 <p className="font-bold text-red-600">{error}</p>
               </div>
             </div>
@@ -269,6 +270,7 @@ export default function ExploreDeals() {
                   <p className="font-bold text-primary">
                     No active deals found.
                   </p>
+
                   <p className="mt-1 text-sm text-on-surface-variant">
                     There are currently no approved deals available for
                     investment.
@@ -286,6 +288,7 @@ export default function ExploreDeals() {
                     <h3 className="text-xl font-bold text-primary manrope">
                       Featured Opportunities
                     </h3>
+
                     <p className="text-sm text-on-surface-variant">
                       Browse approved deals and choose where to invest
                     </p>
@@ -302,6 +305,7 @@ export default function ExploreDeals() {
 
                     const minInvestment =
                       deal?.investmentTerms?.minInvestment;
+
                     const equity = deal?.investmentTerms?.equityOfferedPct;
 
                     return (
@@ -359,6 +363,7 @@ export default function ExploreDeals() {
                               <p className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">
                                 Raised
                               </p>
+
                               <p className="text-sm font-bold text-primary">
                                 {formatMoney(funding.raised)}
                               </p>
@@ -368,6 +373,7 @@ export default function ExploreDeals() {
                               <p className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">
                                 Target
                               </p>
+
                               <p className="text-sm font-bold text-primary">
                                 {formatMoney(funding.target)}
                               </p>
@@ -377,6 +383,7 @@ export default function ExploreDeals() {
                               <p className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">
                                 Min Invest
                               </p>
+
                               <p className="text-sm font-bold text-primary">
                                 {formatMoney(minInvestment || 0)}
                               </p>
@@ -386,6 +393,7 @@ export default function ExploreDeals() {
                               <p className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">
                                 Equity
                               </p>
+
                               <p className="text-sm font-bold text-secondary">
                                 {equity ? `${equity}%` : "N/A"}
                               </p>
@@ -425,12 +433,12 @@ export default function ExploreDeals() {
                             </p>
                           </div>
 
-                         <Link
+                          <Link
                             to={`/DealDetails/${deal._id}`}
                             className="mt-6 block w-full rounded-xl bg-primary py-3 text-center text-sm font-bold text-white transition-opacity hover:opacity-90"
                           >
                             Invest Now
-                        </Link>
+                          </Link>
                         </div>
                       </article>
                     );
@@ -445,6 +453,7 @@ export default function ExploreDeals() {
                       <h3 className="text-xl font-bold text-primary manrope">
                         Marketplace Summary
                       </h3>
+
                       <p className="text-sm text-on-surface-variant">
                         Current active investment opportunities
                       </p>
@@ -456,59 +465,35 @@ export default function ExploreDeals() {
                   </div>
 
                   <div className="space-y-5">
-                    <div className="flex items-center justify-between border-b border-outline-variant/10 pb-4">
-                      <span className="text-sm text-on-surface-variant">
-                        Active Deals
-                      </span>
-                      <span className="text-lg font-bold text-primary">
-                        {deals.length}
-                      </span>
-                    </div>
+                    <SummaryRow label="Active Deals" value={deals.length} />
 
-                    <div className="flex items-center justify-between border-b border-outline-variant/10 pb-4">
-                      <span className="text-sm text-on-surface-variant">
-                        Total Raised
-                      </span>
-                      <span className="text-lg font-bold text-primary">
-                        {formatMoney(totalRaised)}
-                      </span>
-                    </div>
+                    <SummaryRow
+                      label="Total Raised"
+                      value={formatMoney(totalRaised)}
+                    />
 
-                    <div className="flex items-center justify-between border-b border-outline-variant/10 pb-4">
-                      <span className="text-sm text-on-surface-variant">
-                        Total Target
-                      </span>
-                      <span className="text-lg font-bold text-primary">
-                        {formatMoney(totalTarget)}
-                      </span>
-                    </div>
+                    <SummaryRow
+                      label="Total Target"
+                      value={formatMoney(totalTarget)}
+                    />
 
-                    <div className="flex items-center justify-between border-b border-outline-variant/10 pb-4">
-                      <span className="text-sm text-on-surface-variant">
-                        Total Remaining
-                      </span>
-                      <span className="text-lg font-bold text-secondary">
-                        {formatMoney(totalRemaining)}
-                      </span>
-                    </div>
+                    <SummaryRow
+                      label="Total Remaining"
+                      value={formatMoney(totalRemaining)}
+                      green
+                    />
 
-                    <div className="flex items-center justify-between border-b border-outline-variant/10 pb-4">
-                      <span className="text-sm text-on-surface-variant">
-                        Avg. Funding
-                      </span>
-                      <span className="text-lg font-bold text-secondary">
-                        {averageFunding}%
-                      </span>
-                    </div>
+                    <SummaryRow
+                      label="Avg. Funding"
+                      value={`${averageFunding}%`}
+                      green
+                    />
 
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-on-surface-variant">
-                        Avg. Min Investment
-                      </span>
-                      <span className="text-lg font-bold text-secondary">
-                        {formatMoney(averageMinInvestment)}
-                      </span>
-                    </div>
+                    <SummaryRow
+                      label="Avg. Min Investment"
+                      value={formatMoney(averageMinInvestment)}
+                      green
+                    />
                   </div>
                 </div>
 
@@ -524,6 +509,7 @@ export default function ExploreDeals() {
                       <h3 className="font-bold text-primary manrope">
                         Investor Tip
                       </h3>
+
                       <p className="text-xs text-on-surface-variant">
                         Compare funding progress before investing
                       </p>
@@ -532,8 +518,8 @@ export default function ExploreDeals() {
 
                   <p className="text-sm text-on-surface-variant leading-relaxed">
                     The funding bar is calculated from the real raised amount
-                    divided by the target amount. Remaining amount shows how
-                    much is still needed to fully fund the deal.
+                    divided by the target amount. Remaining amount shows how much
+                    is still needed to fully fund the deal.
                   </p>
                 </div>
               </div>
@@ -561,15 +547,19 @@ export default function ExploreDeals() {
                     <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                       Deal
                     </th>
+
                     <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                       Company
                     </th>
+
                     <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                       Raised
                     </th>
+
                     <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                       Progress
                     </th>
+
                     <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-right">
                       Status
                     </th>
@@ -636,6 +626,22 @@ export default function ExploreDeals() {
           )}
         </div>
       </main>
+    </div>
+  );
+}
+
+function SummaryRow({ label, value, green = false }) {
+  return (
+    <div className="flex items-center justify-between border-b border-outline-variant/10 pb-4 last:border-b-0">
+      <span className="text-sm text-on-surface-variant">{label}</span>
+
+      <span
+        className={`text-lg font-bold ${
+          green ? "text-secondary" : "text-primary"
+        }`}
+      >
+        {value}
+      </span>
     </div>
   );
 }

@@ -113,7 +113,7 @@ export default function Dashboard() {
 
         <nav className="flex-1 space-y-1">
           <Link
-            to="/dashboard"
+            to="/InvestorDashboard"
             className="flex items-center gap-3 px-3 py-2.5 bg-white text-emerald-700 shadow-sm rounded-lg transition-transform duration-200"
           >
             <span className="material-symbols-outlined">dashboard</span>
@@ -164,13 +164,11 @@ export default function Dashboard() {
       </aside>
 
       <main className="flex-1 flex flex-col relative min-w-0 h-screen overflow-y-auto">
-        <header className="sticky top-0 w-full z-50 h-16 px-8 flex justify-between items-center bg-white/70 backdrop-blur-xl border-b border-slate-200/50 shadow-sm">
+         <header className="sticky top-0 w-full z-50 h-16 px-8 flex justify-between items-center bg-white/70 backdrop-blur-xl border-b border-slate-200/50 shadow-sm">
           <div className="flex items-center gap-8">
             <h1 className="text-xl font-bold tracking-tight text-slate-900 manrope">
               Investor Workspace
             </h1>
-
-           
           </div>
 
           <div className="flex items-center gap-4">
@@ -182,6 +180,7 @@ export default function Dashboard() {
               <span className="material-symbols-outlined">help_outline</span>
             </button>
 
+           
           </div>
         </header>
 

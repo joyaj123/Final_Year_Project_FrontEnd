@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const DEFAULT_IMAGE =
@@ -16,6 +16,7 @@ const paymentMethods = [
 
 export default function DealDetails() {
   const { dealId } = useParams();
+  const navigate = useNavigate();
 
   const [deal, setDeal] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -69,31 +70,30 @@ export default function DealDetails() {
       percentage,
     };
   };
+useEffect(() => {
+  const fetchDealDetails = async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-  useEffect(() => {
-    const fetchDealDetails = async () => {
-      try {
-        setLoading(true);
-        setError("");
+      const res = await axios.get(`http://localhost:5000/deals/${dealId}`, {
+        withCredentials: true,
+      });
 
-        const res = await axios.get(`http://localhost:5000/deals/${dealId}`, {
-          withCredentials: true,
-        });
+      setDeal(res.data.deal || res.data);
+    } catch (err) {
+      console.error("Error loading deal details:", err);
+      setError(
+        err.response?.data?.message ||
+          "Unable to load deal details from the database."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setDeal(res.data.deal);
-      } catch (err) {
-        console.error("Error loading deal details:", err);
-        setError(
-          err.response?.data?.message ||
-            "Unable to load deal details from the database."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDealDetails();
-  }, [dealId]);
+  fetchDealDetails();
+}, [dealId]);
 
   const handleInvest = async (e) => {
     e.preventDefault();
@@ -124,6 +124,7 @@ export default function DealDetails() {
 
       setDeal(refreshed.data.deal);
       setAmount("");
+      navigate("/Portfolio");
     } catch (err) {
       console.error("Investment error:", err);
       setError(
@@ -205,7 +206,7 @@ export default function DealDetails() {
 
         <nav className="flex-1 space-y-1">
           <Link
-            to="/dashboard"
+            to="/InvestorDashboard"
             className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
           >
             <span className="material-symbols-outlined">dashboard</span>
