@@ -11,6 +11,7 @@ import AdminPendingDeals from "./pages/admin/AdminPendingDeals";
 import AdminPendingCompanies from "./pages/admin/AdminPendingCompanies";
 import AdminKYCReview from "./pages/admin/AdminKYCReview";
 import AdminAuditLogs from "./pages/admin/AdminAuditLogs";
+import AdminProfile from "./pages/admin/AdminProfile";
 
 // COMPANY
 import CompanyDashboard from "./pages/company/CompanyDashboard";
@@ -29,12 +30,21 @@ import Wallet from "./pages/investor/Wallet";
 import ProfileSetting from "./pages/investor/ProfileSettings";
 import { Toaster } from "react-hot-toast";
 
+import Step1BasicProfile from "./pages/onboarding/Step1BasicProfile";
+import Step2KycVerification from "./pages/onboarding/Step2KycVerification";
+import Step3SourceOfFunds from "./pages/onboarding/Step3SourceOfFunds";
+import Step4CompanyInfo from "./pages/onboarding/Step4CompanyInfo";
+import Step5BankAccount from "./pages/onboarding/Step5BankAccount";
+
+import Step1BasicInfoType from "./pages/listing/Step1BasicInfoType";
+import Step2DetailsClassification from "./pages/listing/Step2DetailsClassification";
+import Step3FundingInformation from "./pages/listing/Step3FundingInformation";
+import Step4Financials from "./pages/listing/Step4Financials";
+import Step5ValuationTeam from "./pages/listing/Step5ValuationTeam";
+import Step6DocumentsMetrics from "./pages/listing/Step6DocumentsMetrics";
+
 // SHARED
 import UserProfile from "./pages/Profile.jsx";
-
-// ONBOARDING / LISTING (optional protection depending on your logic)
-import Step5BankAccount from "./pages/onboarding/Step5BankAccount";
-import Step6DocumentsMetrics from "./pages/listing/Step6DocumentsMetrics";
 
 export default function App() {
   return (
@@ -52,6 +62,7 @@ export default function App() {
         <Route path="/pending-companies" element={<AdminPendingCompanies />} />
         <Route path="/kyc-review" element={<AdminKYCReview />} />
         <Route path="/audit-logs" element={<AdminAuditLogs />} />
+        <Route path="/admin-profile" element={<AdminProfile />} />
       </Route>
 
       {/* BUSINESS OWNER ROUTES */}
@@ -85,7 +96,22 @@ export default function App() {
         }
       >
         <Route path="/profile" element={<UserProfile />} />
+      </Route>
+
+      <Route>
+        <Route path="/Step1BasicProfile" element={<Step1BasicProfile />} />
+        <Route path="/Step2KycVerification" element={<Step2KycVerification />} />
+        <Route path="/Step3SourceOfFunds" element={<Step3SourceOfFunds />} />
+        <Route path="/Step4CompanyInfo" element={<Step4CompanyInfo />} />
         <Route path="/Step5BankAccount" element={<Step5BankAccount />} />
+      </Route>
+
+      <Route>
+      	<Route path="/Step1BasicInfoType" element={<Step1BasicInfoType />} />
+        <Route path="/Step2DetailsClassification" element={<Step2DetailsClassification />} />
+        <Route path="/Step3FundingInformation" element={<Step3FundingInformation />} />
+        <Route path="/Step4Financials" element={<Step4Financials />} />
+        <Route path="/Step5ValuationTeam" element={<Step5ValuationTeam />} />
         <Route path="/Step6DocumentsMetrics" element={<Step6DocumentsMetrics />} />
       </Route>
 

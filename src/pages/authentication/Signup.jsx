@@ -154,9 +154,9 @@ export default function Signup() {
 
       setTimeout(() => {
         if (payload.userType === "INVESTOR") {
-          navigate("/onboarding/Step1BasicProfile");
+          navigate("/Step1BasicProfile");
         } else if (payload.userType === "BUSINESS_OWNER") {
-          navigate("/listing/Step1BasicInfoType");
+          navigate("/Step1BasicInfoType");
         } else {
           navigate("/login");
         }

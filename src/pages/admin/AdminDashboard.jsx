@@ -2,6 +2,61 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const navItems = [
+  {
+    icon: "dashboard",
+    label: "Dashboard",
+    path: "/admin-dashboard",
+    active: true,
+    filled: true,
+  },
+  {
+    icon: "handshake",
+    label: "Pending Deals",
+    path: "/pending-deals",
+    active: false,
+  },
+  {
+    icon: "business",
+    label: "Pending Companies",
+    path: "/pending-companies",
+    active: false,
+  },
+  {
+    icon: "verified_user",
+    label: "KYC Review",
+    path: "/kyc-review",
+    active: false,
+  },
+  {
+    icon: "history_edu",
+    label: "Audit Logs",
+    path: "/audit-logs",
+    active: false,
+  },
+  {
+    icon: "person",
+    label: "Profile",
+    path: "/admin-profile",
+    active: false,
+  },
+];
+
+function Icon({ name, className = "", filled = false, weight = 400 }) {
+  return (
+    <span
+      className={`material-symbols-outlined ${className}`}
+      style={{
+        fontVariationSettings: `'FILL' ${
+          filled ? 1 : 0
+        }, 'wght' ${weight}, 'GRAD' 0, 'opsz' 24`,
+      }}
+    >
+      {name}
+    </span>
+  );
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -55,45 +110,24 @@ export default function AdminDashboard() {
         </div>
 
         <nav className="flex-1 space-y-1">
-          <Link
-            to="/admin-dashboard"
-            className="flex items-center gap-3 px-3 py-2.5 bg-white text-emerald-700 shadow-sm rounded-lg transition-transform duration-200"
-          >
-            <span className="material-symbols-outlined">dashboard</span>
-            <span className="font-medium text-sm">Dashboard</span>
-          </Link>
-
-          <Link
-            to="/pending-deals"
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-          >
-            <span className="material-symbols-outlined">handshake</span>
-            <span className="font-medium text-sm">Pending Deals</span>
-          </Link>
-
-          <Link
-            to="/pending-companies"
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-          >
-            <span className="material-symbols-outlined">business</span>
-            <span className="font-medium text-sm">Pending Companies</span>
-          </Link>
-
-          <Link
-            to="/kyc-review"
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-          >
-            <span className="material-symbols-outlined">verified_user</span>
-            <span className="font-medium text-sm">KYC Review</span>
-          </Link>
-
-          <Link
-            to="/audit-logs"
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-          >
-            <span className="material-symbols-outlined">history_edu</span>
-            <span className="font-medium text-sm">Audit Logs</span>
-          </Link>
+          {navItems.map((item) => (
+            <Link
+              key={item.label}
+              to={item.path}
+              className={
+                item.active
+                  ? "flex items-center gap-3 px-3 py-2.5 bg-white text-emerald-700 shadow-sm rounded-lg transition-transform duration-200"
+                  : "flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
+              }
+            >
+              <Icon
+                name={item.icon}
+                filled={item.filled}
+                className={item.active ? "text-emerald-700" : ""}
+              />
+              <span className="font-medium text-sm">{item.label}</span>
+            </Link>
+          ))}
         </nav>
 
         <div className="mt-auto border-t border-slate-200/50 pt-4">
@@ -101,7 +135,7 @@ export default function AdminDashboard() {
             className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
             href="#"
           >
-            <span className="material-symbols-outlined">logout</span>
+            <Icon name="logout" />
             <span className="font-medium text-sm">Log Out</span>
           </a>
         </div>
@@ -117,11 +151,11 @@ export default function AdminDashboard() {
 
           <div className="flex items-center gap-4">
             <button className="p-2 text-slate-500 hover:text-slate-900 transition-colors">
-              <span className="material-symbols-outlined">notifications</span>
+              <Icon name="notifications" />
             </button>
 
             <button className="p-2 text-slate-500 hover:text-slate-900 transition-colors">
-              <span className="material-symbols-outlined">help_outline</span>
+              <Icon name="help_outline" />
             </button>
 
             <div className="h-6 w-[1px] bg-outline-variant mx-2"></div>
@@ -141,9 +175,7 @@ export default function AdminDashboard() {
 
             <div className="flex gap-3">
               <div className="px-4 py-2 bg-surface-container-low rounded-xl flex items-center gap-2 text-on-surface-variant border border-outline-variant/10">
-                <span className="material-symbols-outlined text-sm">
-                  calendar_today
-                </span>
+                <Icon name="calendar_today" className="text-sm" />
                 <span className="text-sm font-medium">
                   {formatDate(start)} - {formatDate(end)}
                 </span>
@@ -165,47 +197,39 @@ export default function AdminDashboard() {
               </div>
 
               <div className="flex-1 relative flex items-end gap-4 px-4 h-56">
-                <div className="group relative flex-1 bg-primary/5 hover:bg-primary/10 transition-colors rounded-t-lg h-[40%] flex flex-col justify-end items-center">
-                  <div className="w-full bg-primary h-[80%] rounded-t-lg opacity-40"></div>
-                  <span className="absolute -bottom-8 text-[10px] font-bold text-on-surface-variant">
-                    JAN
-                  </span>
-                </div>
+                {["JAN", "FEB", "MAR", "APR", "MAY", "JUN"].map(
+                  (month, index) => {
+                    const heights = ["40%", "55%", "45%", "70%", "60%", "85%"];
+                    const innerHeights = [
+                      "80%",
+                      "85%",
+                      "75%",
+                      "90%",
+                      "82%",
+                      "95%",
+                    ];
 
-                <div className="group relative flex-1 bg-primary/5 hover:bg-primary/10 transition-colors rounded-t-lg h-[55%] flex flex-col justify-end items-center">
-                  <div className="w-full bg-primary h-[85%] rounded-t-lg opacity-50"></div>
-                  <span className="absolute -bottom-8 text-[10px] font-bold text-on-surface-variant">
-                    FEB
-                  </span>
-                </div>
+                    return (
+                      <div
+                        key={month}
+                        className="group relative flex-1 bg-primary/5 hover:bg-primary/10 transition-colors rounded-t-lg flex flex-col justify-end items-center"
+                        style={{ height: heights[index] }}
+                      >
+                        <div
+                          className="w-full bg-primary rounded-t-lg"
+                          style={{
+                            height: innerHeights[index],
+                            opacity: index === 5 ? 1 : 0.4 + index * 0.1,
+                          }}
+                        ></div>
 
-                <div className="group relative flex-1 bg-primary/5 hover:bg-primary/10 transition-colors rounded-t-lg h-[45%] flex flex-col justify-end items-center">
-                  <div className="w-full bg-primary h-[75%] rounded-t-lg opacity-60"></div>
-                  <span className="absolute -bottom-8 text-[10px] font-bold text-on-surface-variant">
-                    MAR
-                  </span>
-                </div>
-
-                <div className="group relative flex-1 bg-primary/5 hover:bg-primary/10 transition-colors rounded-t-lg h-[70%] flex flex-col justify-end items-center">
-                  <div className="w-full bg-primary h-[90%] rounded-t-lg opacity-70"></div>
-                  <span className="absolute -bottom-8 text-[10px] font-bold text-on-surface-variant">
-                    APR
-                  </span>
-                </div>
-
-                <div className="group relative flex-1 bg-primary/5 hover:bg-primary/10 transition-colors rounded-t-lg h-[60%] flex flex-col justify-end items-center">
-                  <div className="w-full bg-primary h-[82%] rounded-t-lg opacity-80"></div>
-                  <span className="absolute -bottom-8 text-[10px] font-bold text-on-surface-variant">
-                    MAY
-                  </span>
-                </div>
-
-                <div className="group relative flex-1 bg-primary/5 hover:bg-primary/10 transition-colors rounded-t-lg h-[85%] flex flex-col justify-end items-center">
-                  <div className="w-full bg-primary h-[95%] rounded-t-lg"></div>
-                  <span className="absolute -bottom-8 text-[10px] font-bold text-on-surface-variant">
-                    JUN
-                  </span>
-                </div>
+                        <span className="absolute -bottom-8 text-[10px] font-bold text-on-surface-variant">
+                          {month}
+                        </span>
+                      </div>
+                    );
+                  }
+                )}
               </div>
             </div>
 
@@ -220,55 +244,33 @@ export default function AdminDashboard() {
                   </p>
                 </div>
 
-                <span className="material-symbols-outlined text-secondary">
-                  monitoring
-                </span>
+                <Icon name="monitoring" className="text-secondary" />
               </div>
 
               <div className="space-y-5">
-                <div className="flex items-center justify-between border-b border-outline-variant/10 pb-4">
-                  <span className="text-sm text-on-surface-variant">
-                    Total Users
-                  </span>
-                  <span className="text-lg font-bold text-primary">
-                    {stats.totalUsers}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between border-b border-outline-variant/10 pb-4">
-                  <span className="text-sm text-on-surface-variant">
-                    Active Deals
-                  </span>
-                  <span className="text-lg font-bold text-primary">
-                    {stats.activeDeals}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between border-b border-outline-variant/10 pb-4">
-                  <span className="text-sm text-on-surface-variant">
-                    Pending KYC
-                  </span>
-                  <span className="text-lg font-bold text-secondary">
-                    {stats.pendingKyc}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-on-surface-variant">
-                    Pending Companies
-                  </span>
-                  <span className="text-lg font-bold text-secondary">
-                    {stats.pendingCompanies}
-                  </span>
-                </div>
+                <StatRow label="Total Users" value={stats.totalUsers} />
+                <StatRow label="Active Deals" value={stats.activeDeals} />
+                <StatRow
+                  label="Pending KYC"
+                  value={stats.pendingKyc}
+                  secondary
+                />
+                <StatRow
+                  label="Pending Companies"
+                  value={stats.pendingCompanies}
+                  secondary
+                  noBorder
+                />
               </div>
 
               <div className="mt-8 rounded-2xl bg-surface-container-low p-5">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
-                    <span className="material-symbols-outlined text-white">
-                      admin_panel_settings
-                    </span>
+                    <Icon
+                      name="admin_panel_settings"
+                      className="text-white"
+                      filled
+                    />
                   </div>
 
                   <div>
@@ -285,6 +287,25 @@ export default function AdminDashboard() {
           </div>
         </div>
       </main>
+    </div>
+  );
+}
+
+function StatRow({ label, value, secondary = false, noBorder = false }) {
+  return (
+    <div
+      className={`flex items-center justify-between ${
+        noBorder ? "" : "border-b border-outline-variant/10 pb-4"
+      }`}
+    >
+      <span className="text-sm text-on-surface-variant">{label}</span>
+      <span
+        className={`text-lg font-bold ${
+          secondary ? "text-secondary" : "text-primary"
+        }`}
+      >
+        {value}
+      </span>
     </div>
   );
 }
