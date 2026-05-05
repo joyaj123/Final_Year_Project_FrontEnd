@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const navItems = [
   { icon: "dashboard", label: "Dashboard", path: "/admin-dashboard", active: false },
@@ -60,6 +61,11 @@ export default function AdminKYCReview() {
       );
 
       setQueueItems((prev) => prev.filter((c) => c._id !== id));
+      if (decision === "approve") {
+      toast.success("KYC Approved successfully ");
+    } else {
+      toast("KYC Rejected ");
+    }
     } catch (err) {
       console.error(err);
     }

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect,useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 const navItems = [
   { icon: "dashboard", label: "Dashboard",path:"/admin-dashboard", active: false },
   { icon: "handshake", label: "Pending Deals",path:"/pending-deals", active: true, filled: true },
@@ -81,9 +82,13 @@ const handleDecision =async(dealId,decision)=>{
           withCredentials: true,
       },
     );
-     alert(res.data.message);
       setPendingDeals((prev)=>prev.filter((d)=>d._id!==dealId)
       );
+      if (decision === "approve") {
+      toast.success("Deal Approved successfully ");
+    } else {
+      toast("Deal Rejected ");
+    }
     
   }catch (err) {
       console.log(err);
