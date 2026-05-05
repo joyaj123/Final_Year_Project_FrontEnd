@@ -40,32 +40,35 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/investor-dashboard" element={<InvestorDashboard />} />
+      <Route path="/Signup" element={<Signup />} />
+
+      <Route path="/Step1BasicProfile" element={<Step1BasicProfile />} />
+      <Route path="/Step2KycVerification" element={<Step2KycVerification />} />
+      <Route path="/Step3SourceOfFunds" element={<Step3SourceOfFunds />} />
+      <Route path="/Step4CompanyInfo" element={<Step4CompanyInfo />} />
+      <Route path="/Step5BankAccount" element={<Step5BankAccount />} />
+
+      <Route path="/Step1BasicInfoType" element={<Step2DetailsClassification />} />
+      <Route path="/Step2DetailsClassification" element={<Step2DetailsClassification />} />
+      <Route path="/Step3FundingInformation" element={<Step3FundingInformation />} />
+      <Route path="/Step4Financials" element={<Step4Financials />} />
+      <Route path="/Step5ValuationTeam" element={<Step5ValuationTeam />} />
+      <Route path="/Step6DocumentsMetrics" element={<Step6DocumentsMetrics />} />
+
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="/company-dashboard" element={<CompanyDashboard />} />
       <Route path="/pending-deals" element={<AdminPendingDeals />} />
       <Route path="/pending-companies" element={<AdminPendingCompanies/>}/>
       <Route path="/kyc-review" element={<AdminKYCReview/>}/>
       <Route path="/audit-logs" element={<AdminAuditLogs/>}/>
+
       <Route path="/portfolio" element={<Portfolio/>}/>
       <Route path="/company-deals" element={<Deals />} />
       <Route path="/company-create-deal" element={<Create_Deal />} />
       <Route path="/company-distributions" element={<Distribution />} />
       <Route path="/company-create-distribution" element={<Create_Distribution />} />
       <Route path="/company-wallet" element={<CompanyWallet />} />
-            <Route path="/profile" element={<UserProfile />} />
-
-      
-
-      
-
-
-      {/* page par défaut */}
-     
-      <Route path="/Signup" element={<Signup />} />
-      <Route path="/Step5BankAccount" element={<Step5BankAccount />} />
-      <Route path="/Step6DocumentsMetrics" element={<Step6DocumentsMetrics />} />
-
+      <Route path="/profile" element={<UserProfile />} />
 
       <Route path="/DealDetails/:dealId" element={<DealDetails />} />
       <Route path="/ExploreDeals" element={<ExploreDeals />} />
@@ -73,10 +76,6 @@ export default function App() {
       <Route path="/Portfolio" element={<Portfolio />} />
       <Route path="/Wallet" element={<Wallet />} />
       <Route path="/ProfileSetting" element={<ProfileSetting />} />
-
-     
-      {/* si route inconnue */}
-      <Route path="*" element={<Navigate to="/InvestorDashboard" replace />} />
     </Routes>
   );
 }
