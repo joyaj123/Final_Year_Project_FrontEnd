@@ -35,9 +35,12 @@ import Portfolio from "./pages/investor/Portfolio";
 import Wallet from "./pages/investor/Wallet";
 import CompanyWallet from "./pages/company/Wallet.jsx";
 import ProfileSetting from "./pages/investor/ProfileSettings";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   return (
+    <>
+     <Toaster position="top-right" reverseOrder={false} />
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/investor-dashboard" element={<InvestorDashboard />} />
@@ -78,5 +81,6 @@ export default function App() {
       {/* si route inconnue */}
       <Route path="*" element={<Navigate to="/InvestorDashboard" replace />} />
     </Routes>
+    </>
   );
 }

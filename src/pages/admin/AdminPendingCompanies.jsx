@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect,useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 const navItems = [
   { icon: "dashboard", label: "Dashboard",path:"/admin-dashboard", active: false },
   { icon: "handshake", label: "Pending Deals",path:"/pending-deals", active: false },
@@ -59,10 +60,11 @@ export default function AdminPendingCompanies() {
       }
     );
     setCompanies((prev) => prev.filter((c) => c._id !== id));
-    if (res.data?.message) {
-      alert(res.data.message); 
-
-  }
+    if (decision === "approve") {
+      toast.success("Company Approved successfully ");
+    } else {
+      toast("Company Rejected ");
+    }
 
   } catch (err) {
     console.error("Review error:", err);
