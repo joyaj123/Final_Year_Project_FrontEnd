@@ -45,7 +45,7 @@ export default function AdminKYCReview() {
           setSelectedInvestor(pending[0]);
         }
       } catch (err) {
-        console.error(err);
+        toast.error(err);
       }
     };
 
@@ -67,7 +67,7 @@ export default function AdminKYCReview() {
       toast("KYC Rejected ");
     }
     } catch (err) {
-      console.error(err);
+      toast.error(err);
     }
   };
 

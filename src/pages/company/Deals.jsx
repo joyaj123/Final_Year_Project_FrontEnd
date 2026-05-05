@@ -10,7 +10,7 @@ const navItems = [
   { label: "Profile", icon: "person", to:"/profile" },
 ];
 
-const filters = ["ALL", "DRAFT", "OPEN", "FUNDED", "PENDING_REVIEW"];
+const filters = ["ALL", "OPEN", "FUNDED", "PENDING_REVIEW"];
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("en-US", {
@@ -27,8 +27,6 @@ const getStatusLabel = (status) => {
       return "Funded";
     case "PENDING_REVIEW":
       return "Pending Review";
-    case "DRAFT":
-      return "Draft";
     default:
       return status;
   }
@@ -42,8 +40,6 @@ const getStatusClasses = (status) => {
       return "bg-surface-container-highest text-on-surface-variant";
     case "PENDING_REVIEW":
       return "bg-primary-fixed text-on-primary-fixed-variant";
-    case "DRAFT":
-      return "bg-surface-container text-on-surface-variant";
     default:
       return "bg-surface-container text-on-surface-variant";
   }
@@ -61,20 +57,24 @@ useEffect(() => {
       );
 
       setDeals(res.data.deals);
+console.log("DEALS:", res.data);
+console.log("STATUSES:", res.data.deals.map(d => d.status));
     } catch (err) {
       console.log(err);
     }
+    
   };
 
   fetchDeals();
+  
 }, []);
 
   const [activeFilter, setActiveFilter] = useState("ALL");
 
   const filteredDeals = useMemo(() => {
     if (activeFilter === "ALL") return deals;
-return deals.filter((deal) => deal.status === activeFilter);
-  }, [activeFilter]);
+return deals.filter((deal) => deal.status?.toUpperCase()=== activeFilter);
+  }, [activeFilter,deals]);
 
   const totalTargetRaise = useMemo(
   () =>
@@ -237,7 +237,7 @@ return deals.filter((deal) => deal.status === activeFilter);
             <div className="divide-y divide-outline-variant/10">
               {filteredDeals.map((deal) => (
                 <div
-                  key={deal.id}
+                  key={deal._id}
                   className="grid grid-cols-1 md:grid-cols-12 items-center px-4 md:px-8 py-5 hover:bg-surface-container-low/50 transition-colors"
                 >
                   <div className="col-span-4 flex items-center gap-4">

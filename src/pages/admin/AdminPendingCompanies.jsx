@@ -40,9 +40,9 @@ export default function AdminPendingCompanies() {
           setSelectedCompany(pending[0]);
         }
       }catch(err){
-       console.error("FULL ERROR:", err);
-      console.error("RESPONSE DATA:", err.response?.data);
-      console.error("STATUS:", err.response?.status);
+       toast.error("FULL ERROR:", err);
+      toast.error("RESPONSE DATA:", err.response?.data);
+      toast.error("STATUS:", err.response?.status);
       }
     };
     fetchCompanies();
@@ -67,7 +67,7 @@ export default function AdminPendingCompanies() {
     }
 
   } catch (err) {
-    console.error("Review error:", err);
+    toast.error("Review error:", err);
     if (err.response) {
     alert(err.response.data.message); 
   } else {

@@ -61,11 +61,10 @@ export default function PendingDealsReview() {
         (deal)=>deal.adminStatus==="PENDING"
       );
       setPendingDeals(pending);
-      console.log("RAW RESPONSE:", res.data);
     }catch(err){
-       console.error("FULL ERROR:", err);
-      console.error("RESPONSE DATA:", err.response?.data);
-      console.error("STATUS:", err.response?.status);
+       toast.error("FULL ERROR:", err);
+      toast.error("RESPONSE DATA:", err.response?.data);
+      toast.error("STATUS:", err.response?.status);
     }
   };
   fetchDeals();
@@ -91,7 +90,7 @@ const handleDecision =async(dealId,decision)=>{
     }
     
   }catch (err) {
-      console.log(err);
+      toast.error(err);
 
       if (err.response) {
         alert(err.response.data.message);
