@@ -9,6 +9,8 @@ const navItems = [
   { icon: "business", label: "Pending Companies", path: "/pending-companies", active: false },
   { icon: "verified_user", label: "KYC Review", path: "/kyc-review", active: true, filled: true },
   { icon: "history_edu", label: "Audit Logs", path: "/audit-logs", active: false },
+  {icon: "person", label: "Profile", path: "/admin-profile", active: false },
+
 ];
 
 function Icon({ name, className = "", filled = false, weight = 400 }) {
