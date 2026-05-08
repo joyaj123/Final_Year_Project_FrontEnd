@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect,useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import API from "../../api/axios";
 const navItems = [
   { icon: "dashboard", label: "Dashboard",path:"/admin-dashboard", active: false },
   { icon: "handshake", label: "Pending Deals",path:"/pending-deals", active: true, filled: true },
@@ -57,23 +58,23 @@ export default function PendingDealsReview() {
   useEffect(()=>{
   const fetchDeals=async()=>{
     try{
-      const res = await axios.get("http://localhost:5000/deals");
+      const res = await API.get("/deals");
       const pending=res.data.filter(
         (deal)=>deal.adminStatus==="PENDING"
       );
       setPendingDeals(pending);
     }catch(err){
-       toast.error("FULL ERROR:", err);
-      toast.error("RESPONSE DATA:", err.response?.data);
-      toast.error("STATUS:", err.response?.status);
+       console.error("FULL ERROR:", err);
+      console.error("RESPONSE DATA:", err.response?.data);
+      console.error("STATUS:", err.response?.status);
     }
   };
   fetchDeals();
 },[]);
 const handleDecision =async(dealId,decision)=>{
   try{
-   const res = await axios.put(
-      `http://localhost:5000/deals/${dealId}/decision`,
+   const res = await API.put(
+      `/deals/${dealId}/decision`,
       {
         decision,
         notes:"",
@@ -84,6 +85,7 @@ const handleDecision =async(dealId,decision)=>{
     );
       setPendingDeals((prev)=>prev.filter((d)=>d._id!==dealId)
       );
+      setSelectedDeal(null);
       if (decision === "approve") {
       toast.success("Deal Approved successfully ");
     } else {
@@ -91,7 +93,7 @@ const handleDecision =async(dealId,decision)=>{
     }
     
   }catch (err) {
-      toast.error(err);
+      toast.error(err.response?.data?.message || err.message);
 
       if (err.response) {
         alert(err.response.data.message);
@@ -304,7 +306,7 @@ const handleDecision =async(dealId,decision)=>{
                         </td>
 
                         <td className="px-6 py-5">
-                          <button onClick={() => setSelectedDeal(deal)}>
+                          <button onClick={() => setSelectedDeal(deal)}  className="border border-slate-400 px-3 py-1 rounded-md hover:bg-slate-100 transition" >
                             Review
                           </button>
                         </td>

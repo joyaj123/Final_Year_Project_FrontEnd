@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API from "../../api/axios";
 
 const navItems = [
   {
@@ -68,7 +69,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/admin/stats", {
+        const res = await API.get("/admin/stats", {
           withCredentials: true,
         });
 

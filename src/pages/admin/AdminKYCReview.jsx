@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import API from "../../api/axios";
 
 const navItems = [
   { icon: "dashboard", label: "Dashboard", path: "/admin-dashboard", active: false },
@@ -35,7 +36,7 @@ export default function AdminKYCReview() {
   useEffect(() => {
     const fetchInvestors = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/investors");
+        const res = await API.get("/investors");
 
         const pending = res.data.filter(
           (c) => c.kyc?.status !== "APPROVED" && c.kyc?.status !== "REJECTED"
@@ -47,7 +48,7 @@ export default function AdminKYCReview() {
           setSelectedInvestor(pending[0]);
         }
       } catch (err) {
-        toast.error(err);
+        toast.error(err.response?.data?.message || err.message);
       }
     };
 
@@ -56,20 +57,21 @@ export default function AdminKYCReview() {
 
   const reviewKyc = async (id, decision) => {
     try {
-      await axios.put(
-        `http://localhost:5000/investors/${id}/decision`,
+      await API.put(
+        `/investors/${id}/decision`,
         { decision, notes: "" },
         { withCredentials: true }
       );
 
       setQueueItems((prev) => prev.filter((c) => c._id !== id));
+      setSelectedInvestor(null);
       if (decision === "approve") {
       toast.success("KYC Approved successfully ");
     } else {
       toast("KYC Rejected ");
     }
     } catch (err) {
-      toast.error(err);
+      toast.error(err.response?.data?.message || err.message);
     }
   };
 
