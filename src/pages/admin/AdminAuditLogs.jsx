@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API from "../../api/axios";
 const navItems = [
   { icon: "dashboard", label: "Dashboard", path:"/admin-dashboard",active: false },
   { icon: "handshake", label: "Pending Deals", path:"/pending-deals",active: false },
@@ -27,7 +28,7 @@ export default function AdminAuditLogs() {
   const [logs, setLogs] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
 useEffect(() => {
-  axios.get("http://localhost:5000/audit_Logs", {
+  API.get("/audit_Logs", {
     withCredentials: true
   })
   .then(res => {
