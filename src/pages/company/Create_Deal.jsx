@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import API from "../../api/axios";
+
 
 const navItems = [
   { label: "Dashboard", icon: "dashboard", href: "/company-dashboard" },
@@ -10,10 +12,7 @@ const navItems = [
   { label: "Profile", icon: "person", href: "/profile" },
 ];
 
-const api = axios.create({
-  baseURL: "http://localhost:5000", /////////// BACKEND PORT
-  withCredentials: true,
-});
+
 
 export default function CreateDealPage() {
   const navigate = useNavigate();
@@ -219,7 +218,7 @@ export default function CreateDealPage() {
     try {
       setSubmitting(true);
 
-      const res = await api.post("/deals/createDeal", payload); /////////// CREATE DEAL ROUTE
+      const res = await API.post("/deals/createDeal", payload); /////////// CREATE DEAL ROUTE
 
       setSuccessMessage(res.data.message || "Deal created successfully");
 
@@ -289,15 +288,7 @@ export default function CreateDealPage() {
           ))}
         </nav>
 
-        <div className="mt-auto border-t border-slate-200/50 pt-4">
-          <button
-            type="button"
-            className="w-full py-3 bg-primary-container text-white rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:opacity-90 transition-all"
-          >
-            <span className="material-symbols-outlined text-sm">add</span>
-            New Investment
-          </button>
-        </div>
+       
       </aside>
 
       <main className="flex-1 min-w-0">

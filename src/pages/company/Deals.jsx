@@ -1,6 +1,8 @@
 import React, { useMemo, useState,useEffect  } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import API from "../../api/axios";
+
 
 const navItems = [
   { label: "Dashboard", icon: "dashboard", to: "/company-dashboard" },
@@ -51,8 +53,8 @@ export default function MyDealsPage() {
 useEffect(() => {
   const fetchDeals = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5000/deals/mydeals",
+      const res = await API.get(
+        "/deals/mydeals",
         { withCredentials: true }
       );
 
@@ -144,13 +146,7 @@ return deals.filter((deal) => deal.status?.toUpperCase()=== activeFilter);
 </nav>
 
         <div className="mt-auto border-t border-slate-200/50 pt-4">
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-            href="#"
-          >
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-medium text-sm">Log Out</span>
-          </a>
+          
         </div>
       </aside>
 
@@ -231,7 +227,7 @@ return deals.filter((deal) => deal.status?.toUpperCase()=== activeFilter);
               <div className="col-span-2">Status</div>
               <div className="col-span-2">Target Raise</div>
               <div className="col-span-2">Funding</div>
-              <div className="col-span-2 text-right">Action</div>
+              <div className="col-span-2 text-right">Notes</div>
             </div>
 
             <div className="divide-y divide-outline-variant/10">
@@ -287,11 +283,11 @@ return deals.filter((deal) => deal.status?.toUpperCase()=== activeFilter);
                   </div>
 
                   <div className="col-span-2 pt-4 md:pt-0 text-right">
-                    <button className="p-2 text-on-surface-variant hover:text-primary transition-colors">
-                      <span className="material-symbols-outlined">
-                        more_horiz
-                      </span>
-                    </button>
+                    <div className="col-span-2 pt-4 md:pt-0 text-right">
+  <div className="text-sm text-gray-600">
+    {deal.adminReview?.notes || "No notes"}
+  </div>
+</div>
                   </div>
                 </div>
               ))}
