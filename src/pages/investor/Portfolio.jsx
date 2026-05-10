@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import API from "../../api/axios";
 
 export default function Portfolio() {
   const [holdings, setHoldings] = useState([]);
@@ -9,7 +9,7 @@ export default function Portfolio() {
   useEffect(() => {
     const fetchPortfolio = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/ownership/portfolio", {
+        const res = await API.get("/ownership/portfolio", {
           withCredentials: true,
         });
 

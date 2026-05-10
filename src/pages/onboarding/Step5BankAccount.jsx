@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import API from "../../api/axios";
 
 const STORAGE_KEY = "onboardingData";
 
 const defaultOnboardingData = {
   investorType: "INDIVIDUAL",
   riskTolerance: "",
-  investmentPreferences: {
-    minAmount: "",
-    maxAmount: "",
-    currency: "USD",
+  investmentSweetSpot: {
+    min: "",
+    max: "",
   },
 
   kyc: {
@@ -53,9 +53,9 @@ function getSavedOnboardingData() {
     return {
       ...defaultOnboardingData,
       ...parsed,
-      investmentPreferences: {
-        ...defaultOnboardingData.investmentPreferences,
-        ...(parsed.investmentPreferences || {}),
+      investmentSweetSpot: {
+        ...defaultOnboardingData.investmentSweetSpot,
+        ...(parsed.investmentSweetSpot || {}),
       },
       kyc: {
         ...defaultOnboardingData.kyc,
@@ -89,16 +89,16 @@ function buildPayload(formData) {
     investorType: formData.investorType,
     riskTolerance: formData.riskTolerance || undefined,
 
-    investmentPreferences: {
-      minAmount:
-        formData.investmentPreferences.minAmount === ""
+    investmentSweetSpot: {
+      min:
+        formData.investmentSweetSpot.min === ""
           ? undefined
-          : Number(formData.investmentPreferences.minAmount),
-      maxAmount:
-        formData.investmentPreferences.maxAmount === ""
+          : Number(formData.investmentSweetSpot.min),
+      max:
+        formData.investmentSweetSpot.max === ""
           ? undefined
-          : Number(formData.investmentPreferences.maxAmount),
-      currency: formData.investmentPreferences.currency || undefined,
+          : Number(formData.investmentSweetSpot.max),
+      currency: formData.investmentSweetSpot.currency || undefined,
     },
 
     kyc: formData.kyc?.documentType
@@ -188,29 +188,29 @@ export default function Step5BankAccount() {
 
       const payload = buildPayload(formData);
 
-      const response = await fetch("http://localhost:5000/investors/onboarding", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to complete onboarding.");
-      }
+      await API.post(
+        "/investors/onboarding",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
 
       localStorage.removeItem(STORAGE_KEY);
       setSuccessMessage("Onboarding completed successfully.");
 
       setTimeout(() => {
-        navigate("/dashboard");
-      }, 1200);
+        navigate("/");
+      }, 1800);
     } catch (error) {
-      setServerError(error.message || "Something went wrong.");
+      setServerError(
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -286,6 +286,7 @@ export default function Step5BankAccount() {
               <span className="material-symbols-outlined">business</span>
               <span className="text-sm font-medium">Company Info</span>
             </Link>
+
             <Link
               className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white text-slate-900 font-bold shadow-sm transition-all"
               to="/Step5BankAccount"
@@ -314,6 +315,7 @@ export default function Step5BankAccount() {
                   info
                 </span>
               </div>
+
               <div>
                 <h4 className="font-bold text-primary">
                   Required Banking Details
@@ -397,6 +399,7 @@ export default function Step5BankAccount() {
                             star
                           </span>
                         </div>
+
                         <div>
                           <h4 className="font-bold text-primary">
                             Set as Primary Account
@@ -422,16 +425,16 @@ export default function Step5BankAccount() {
                   </section>
 
                   <div className="flex justify-between items-center pt-4">
-                     <button
-                        type="button"
-                        onClick={() => navigate("/Step4CompanyInfo")}
-                        className="px-8 py-3 rounded-xl font-bold text-sm text-slate-500 hover:text-primary transition-colors flex items-center gap-2"
-                      >
-                        <span className="material-symbols-outlined text-[20px]">
-                          arrow_back
-                        </span>
-                        Previous Step
-                      </button>
+                    <button
+                      type="button"
+                      onClick={() => navigate("/Step4CompanyInfo")}
+                      className="px-8 py-3 rounded-xl font-bold text-sm text-slate-500 hover:text-primary transition-colors flex items-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">
+                        arrow_back
+                      </span>
+                      Previous Step
+                    </button>
 
                     <button
                       type="submit"

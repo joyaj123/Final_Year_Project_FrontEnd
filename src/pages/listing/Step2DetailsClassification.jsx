@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import API from "../../api/axios";
 
 const STORAGE_KEY = "listingWizardData";
-const API_BASE_URL = "http://localhost:5000";
 
 const defaultListingData = {
   company: {
@@ -192,14 +192,8 @@ export default function Step2DetailsClassificationStyled() {
         setLoadingSectors(true);
         setSectorFetchError("");
 
-        const response = await fetch(`${API_BASE_URL}/sectors`);
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch sectors");
-        }
-
-        const data = await response.json();
-        const normalizedSectors = normalizeList(data, "sectors");
+        const response = await API.get("/sectors", { withCredentials: true });
+        const normalizedSectors = normalizeList(response.data, "sectors");
 
         setSectors(normalizedSectors);
       } catch (error) {
@@ -226,16 +220,10 @@ export default function Step2DetailsClassificationStyled() {
         setLoadingSubSectors(true);
         setSubSectorFetchError("");
 
-        const response = await fetch(
-          `${API_BASE_URL}/subsectors?sectorId=${sectorId}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch subsectors");
-        }
-
-        const data = await response.json();
-        const normalizedSubSectors = normalizeList(data, "subsectors");
+        const response = await API.get(`/subsectors?sectorId=${sectorId}`, {
+          withCredentials: true,
+        });
+        const normalizedSubSectors = normalizeList(response.data, "subsectors");
 
         setSubSectors(normalizedSubSectors);
       } catch (error) {
@@ -789,11 +777,15 @@ export default function Step2DetailsClassificationStyled() {
                               : "Select sector..."}
                           </option>
 
-                          {sectors.map((sector) => (
-                            <option key={sector._id} value={sector._id}>
-                              {sector.name}
-                            </option>
-                          ))}
+                          {sectors.map((sector) => {
+                            const id = sector._id || sector.id;
+
+                            return (
+                              <option key={id} value={id}>
+                                {sector.name || sector.title}
+                              </option>
+                            );
+                          })}
                         </select>
 
                         <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -845,11 +837,15 @@ export default function Step2DetailsClassificationStyled() {
                               : "Select sub sector..."}
                           </option>
 
-                          {subSectors.map((subSector) => (
-                            <option key={subSector._id} value={subSector._id}>
-                              {subSector.name}
-                            </option>
-                          ))}
+                          {subSectors.map((subSector) => {
+                            const id = subSector._id || subSector.id;
+
+                            return (
+                              <option key={id} value={id}>
+                                {subSector.name || subSector.title}
+                              </option>
+                            );
+                          })}
                         </select>
 
                         <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">

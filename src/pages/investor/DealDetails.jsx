@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../../api/axios";
 
 const DEFAULT_IMAGE =
   "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80";
@@ -76,7 +76,7 @@ useEffect(() => {
       setLoading(true);
       setError("");
 
-      const res = await axios.get(`http://localhost:5000/deals/${dealId}`, {
+      const res = await API.get(`/deals/${dealId}`, {
         withCredentials: true,
       });
 
@@ -103,8 +103,8 @@ useEffect(() => {
       setError("");
       setSuccess("");
 
-      const res = await axios.post(
-        `http://localhost:5000/deals/${dealId}/invest`,
+      const res = await API.post(
+        `/deals/${dealId}/invest`,
         {
           amount: Number(amount),
           paymentDetails: {
@@ -118,7 +118,7 @@ useEffect(() => {
 
       setSuccess(res.data.message || "Investment completed successfully");
 
-      const refreshed = await axios.get(`http://localhost:5000/deals/${dealId}`, {
+      const refreshed = await API.get(`/deals/${dealId}`, {
         withCredentials: true,
       });
 

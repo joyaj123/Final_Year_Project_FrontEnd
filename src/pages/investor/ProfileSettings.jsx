@@ -1,11 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
-
-const api = axios.create({
-  baseURL: "http://localhost:5000",
-  withCredentials: true,
-});
+import API from "../../api/axios";
 
 const navItems = [
   { label: "Dashboard", icon: "dashboard", to: "/InvestorDashboard" },
@@ -68,7 +63,7 @@ export default function ProfileSettings() {
       setLoading(true);
       setErrorMessage("");
 
-      const res = await api.get("/users/me");
+      const res = await API.get("/users/me");
 
       setUser(res.data.user || null);
       setRoleProfile(res.data.roleProfile || null);
@@ -359,12 +354,8 @@ export default function ProfileSettings() {
                         <input
                           className="w-full pl-10 pr-4 py-4 bg-surface-container border-none rounded-xl font-bold text-xl focus:ring-2 focus:ring-secondary transition-all"
                           type="text"
-                          value={
-                            roleProfile?.investmentPreferences?.minAmount ||
-                            roleProfile?.minInvestment ||
-                            0
-                          }
-                          readOnly
+                          value={roleProfile?.investmentSweetSpotmin || 0}
+                         
                         />
                       </div>
 
@@ -387,9 +378,7 @@ export default function ProfileSettings() {
                           className="w-full pl-10 pr-4 py-4 bg-surface-container border-none rounded-xl font-bold text-xl focus:ring-2 focus:ring-secondary transition-all"
                           type="text"
                           value={
-                            roleProfile?.investmentPreferences?.maxAmount ||
-                            roleProfile?.maxInvestment ||
-                            0
+                            roleProfile?.investmentSweetSpotmax || 0
                           }
                           readOnly
                         />

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import API from "../../api/axios";
 
 export default function Dashboard() {
   const [wallet, setWallet] = useState({
@@ -34,8 +34,8 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/investors/dashboard",
+        const res = await API.get(
+          "/investors/dashboard",
           {
             withCredentials: true,
           }

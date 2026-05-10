@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import API from "../../api/axios";
+
 
 const DEFAULT_IMAGE =
   "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80";
@@ -60,8 +61,8 @@ export default function ExploreDeals() {
         setLoading(true);
         setError("");
 
-        const res = await axios.get(
-          "http://localhost:5000/deals/activedeals",
+        const res = await API.get(
+          "/deals/activedeals",
           {
             withCredentials: true,
           }
