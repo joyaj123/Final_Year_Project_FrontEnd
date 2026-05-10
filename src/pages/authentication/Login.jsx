@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import API from "../../api/axios";
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -60,8 +62,8 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const res = await axios.post(
-        "http://localhost:5000/users/login", /////////// LOGIN ROUTE
+      const res = await API.post(
+        "/users/login", /////////// LOGIN ROUTE
         {
           email,
           password,
@@ -189,6 +191,15 @@ export default function Login() {
                 <p className="text-red-500 text-xs mt-2">{errors.password}</p>
               )}
             </div>
+            <p className="text-center text-sm text-gray-500 mt-4">
+  Don’t have an account?{" "}
+  <a
+    href="/signup"
+    className="text-blue-600 font-semibold hover:underline"
+  >
+    Create one
+  </a>
+</p>
 
             <button
               type="submit"

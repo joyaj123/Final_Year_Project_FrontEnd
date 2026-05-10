@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import API from "../../api/axios";
+
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -34,8 +36,8 @@ export default function Signup() {
         setCountriesLoading(true);
         setServerError("");
 
-        const { data: result } = await axios.get(
-          "http://localhost:5000/countries",
+        const { data: result } = await API.get(
+          "/countries",
           {
             withCredentials: true,
           }

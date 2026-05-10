@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import API from "../../api/axios";
+
 
 const STORAGE_KEY = "listingWizardData";
-const API_BASE_URL = "http://localhost:5000";
 
 const documentDefinitions = [
   {
@@ -633,8 +634,8 @@ export default function Step6DocumentsMetricsStyled() {
 
       console.log("Payload sent to backend:", payload);
 
-      const response = await axios.post(
-        `http://localhost:5000/company/listing`,
+      const response = await API.post(
+        `/company/listing`,
         payload,
         {
           withCredentials: true,
