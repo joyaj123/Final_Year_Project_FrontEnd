@@ -80,13 +80,7 @@ export default function UserProfile() {
         </nav>
 
         <div className="mt-auto border-t border-slate-200/50 pt-4">
-          <a
-            href="#"
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-          >
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-medium text-sm">Log Out</span>
-          </a>
+          
         </div>
       </aside>
 

@@ -1,11 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import API from "../../api/axios";
 
-const api = axios.create({
-  baseURL: "http://localhost:5000", ////////// BACKEND PORT
-  withCredentials: true, ////////// COOKIES
-});
+
 
 const navItems = [
   { label: "Dashboard", icon: "dashboard", to: "/company-dashboard" },
@@ -122,7 +120,7 @@ export default function WalletPage() {
   const fetchWallet = async () => {
     try {
       setLoadingWallet(true);
-      const res = await api.get("/company/mywallet"); ////////// GET WALLET ROUTE
+      const res = await API.get("/company/mywallet"); ////////// GET WALLET ROUTE
       setWallet(res.data.wallet || null);
     } catch (error) {
       console.log("WALLET ERROR:", error.response?.data || error.message);
@@ -135,7 +133,7 @@ export default function WalletPage() {
   const fetchTransactions = async () => {
     try {
       setLoadingTransactions(true);
-      const res = await api.get("/transactions/mytransactions"); ////////// GET TRANSACTIONS ROUTE
+      const res = await API.get("/transactions/mytransactions"); ////////// GET TRANSACTIONS ROUTE
       setTransactions(res.data.transactions || []);
     } catch (error) {
       console.log("TRANSACTIONS ERROR:", error.response?.data || error.message);
@@ -195,7 +193,7 @@ export default function WalletPage() {
           ? "/transactions/deposit" ////////// DEPOSIT ROUTE
           : "/transactions/withdraw"; ////////// WITHDRAWAL ROUTE
 
-      await api.post(route, body); ////////// BACKEND CALL
+      await API.post(route, body); ////////// BACKEND CALL
 
       setFundSuccess(
         fundForm.type === "DEPOSIT"
@@ -295,13 +293,7 @@ export default function WalletPage() {
         </nav>
 
         <div className="mt-auto border-t border-slate-200/50 pt-4">
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-            href="#"
-          >
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-medium text-sm">Log Out</span>
-          </a>
+         
         </div>
       </aside>
 

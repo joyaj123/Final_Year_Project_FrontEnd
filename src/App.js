@@ -44,7 +44,7 @@ import Step5ValuationTeam from "./pages/listing/Step5ValuationTeam";
 import Step6DocumentsMetrics from "./pages/listing/Step6DocumentsMetrics";
 
 // SHARED
-import UserProfile from "./pages/Profile.jsx";
+import UserProfile from "./pages/company/Profile.jsx";
 
 export default function App() {
   return (

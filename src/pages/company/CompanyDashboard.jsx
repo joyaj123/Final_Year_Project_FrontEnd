@@ -1,7 +1,10 @@
 import React from "react";
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import API from "../../api/axios";
+
+
 
 const navItems = [
   { label: "Dashboard", icon: "dashboard", to: "/company-dashboard", active: true },
@@ -13,11 +16,12 @@ const navItems = [
 
 export default function BusinessDashboard() {
   const [deals, setDeals] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/deals/mydeals", {
+        const res = await API.get("/deals/mydeals", {
           withCredentials: true,
         });
         console.log("DEALS FROM BACKEND:", res.data.deals);
@@ -43,6 +47,19 @@ export default function BusinessDashboard() {
 const totalInvestors = deals.reduce((sum, deal) => {
   return sum + Number(deal.fundingProgress?.investorCount || 0);
 }, 0);
+
+const handleLogout = async () => {
+  try {
+    await API.post("/users/logout", {}, { withCredentials: true });
+  } catch (err) {
+    console.log("Logout backend error:", err);
+  }
+
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+
+  navigate("/", { replace: true });
+};
 
   return (
     <div className="bg-surface text-on-surface flex min-h-screen">
@@ -83,13 +100,14 @@ const totalInvestors = deals.reduce((sum, deal) => {
         </nav>
 
         <div className="mt-auto border-t border-slate-200/50 pt-4">
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-            href="#"
-          >
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-medium text-sm">Log Out</span>
-          </a>
+          <button
+  onClick={handleLogout}
+  className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
+>
+  <span className="material-symbols-outlined">logout</span>
+  <span className="font-medium text-sm">Log Out</span>
+</button>
+
         </div>
       </aside>
 
@@ -158,26 +176,7 @@ const totalInvestors = deals.reduce((sum, deal) => {
                   </span>
                 </span>
               </div>
-              <div className="flex -space-x-2 mt-4 overflow-hidden">
-                <img
-                  className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                  alt="investor avatar"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaRuUWz0F4g5D8-fNdGoTv5QP1JOjk00-tWDreVnvoFXtUCBQzYhOgatMdPFSm1kgmnuqea6mO4ZqcPFIOuEh-Z3J_x77s0GOFDhfHkgdhUA-0zdI1J6CUeVNGDI5G02x6kt6puxEdCeZyoN7uDLn-24z2iERRLVC0sAHvq5ADfCEB362KBFplR71-mt5on_FTX7sf8U7uCQ3tV_x_6g9vHYRreFo0a-RYA6cpXEUeeaKsAk11F8tCBOfFAYyemwPi2QAfdBFaF5li"
-                />
-                <img
-                  className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                  alt="investor avatar"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBvdRkC-7UjJRE8bpBmdhQinfYvumGL_IO-P6CUxXj32kVB8K9ch6AseD2-P6qTv8guBB4RcjbJvSYi1lLHoNaMxmXHDA4xdyO4Shl-RV9j8rbn2Nk1fe0wercWHeWcyHf5TGXV20xg1UjoSiUSA9W_Ev1Vpo8ufMpF4Siw_TayHXBydfT_tSfRzXXVlLB86STdY6tqkWXouEe-NKWUJqjXbeAMekSyLWDSKRlHHkyD_aelo2GW3Qd5IUkdcpvozddOB45Odq_mUZj"
-                />
-                <img
-                  className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                  alt="investor avatar"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUVwt4DdIudQ-sLYSWFIjiKBEL7-LtpRdYe7tksftk1eHwFLhnfW8xBeZMAJMzBzpFYEhHoB6XuMzAHMUwzzayPUmcrnXbb55g6ck1PAZ6r0z3BQAl32M1H8em5Y7Z3KLoV6ZO2sgGkWu6b6LlCW8199nD0t4OhB83K47GyqssssnmHuUU2aG3kcMP4262ees8iCgdTflm4NoAE7C8tARBu5G3_9CvEF7WLgtXcmBvGsv1l7Ap5Vxg7QQ41o8NFBcgON1GCAA2Nu_j"
-                />
-                <div className="flex items-center justify-center h-6 w-6 rounded-full ring-2 ring-white bg-surface-container text-[10px] font-bold">
-                  +2k
-                </div>
-              </div>
+            
             </div>
 
             <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0_8px_32px_rgba(24,28,30,0.04)] flex flex-col gap-1 border border-outline-variant/5">

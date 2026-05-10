@@ -1,18 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios"; ////////// BACKEND
+import API from "../../api/axios";
+
 
 const today = new Date().toLocaleDateString("en-US", {
   year: "numeric",
   month: "long",
   day: "numeric",
 });
-
-const api = axios.create({
-  baseURL: "http://localhost:5000", ////////// BACKEND PORT
-  withCredentials: true, ////////// COOKIES
-});
-
 
 
 const distributionTypes = [
@@ -99,7 +95,7 @@ export default function CreateDistributionPage() {
         currency: formData.currency,
       };
 
-          const res = await api.post(
+          const res = await API.post(
       "/distributions/createdistribution", ////////// CREATE DISTRIBUTION ROUTE
       body ////////// BACKEND BODY
     );
@@ -168,13 +164,7 @@ export default function CreateDistributionPage() {
         </nav>
 
         <div className="mt-auto border-t border-slate-200/50 pt-4">
-          <Link
-            to="/login"
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-          >
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-medium text-sm">Log Out</span>
-          </Link>
+        
         </div>
       </aside>
 

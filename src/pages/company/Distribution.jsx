@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import API from "../../api/axios";
+
 
 const navItems = [
   { label: "Dashboard", icon: "dashboard", to: "/company-dashboard" },
@@ -10,7 +12,7 @@ const navItems = [
   { label: "Profile", icon: "person", to: "/profile" },
 ];
 
-const filters = ["ALL", "SCHEDULED", "COMPLETED", "PROCESSING"];
+const filters = ["ALL"];
 
 const formatCurrency = (value, currency = "USD") =>
   new Intl.NumberFormat("en-US", {
@@ -89,8 +91,8 @@ export default function DistributionsPage() {
   useEffect(() => {
     const fetchDistributions = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/distributions/mydistributions",
+        const res = await API.get(
+          "/distributions/mydistributions",
           { withCredentials: true }
         );
 
@@ -174,13 +176,7 @@ export default function DistributionsPage() {
         </nav>
 
         <div className="mt-auto border-t border-slate-200/50 pt-4">
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-            href="#"
-          >
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-medium text-sm">Log Out</span>
-          </a>
+          
         </div>
       </aside>
 
@@ -256,7 +252,7 @@ export default function DistributionsPage() {
                         }`}
                       >
                         {filter === "ALL"
-                          ? "All Transactions"
+                          ? "All Distributions"
                           : getStatusLabel(filter)}
                       </button>
                     );
