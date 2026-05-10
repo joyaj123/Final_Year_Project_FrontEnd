@@ -1,11 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
-
-const api = axios.create({
-  baseURL: "http://localhost:5000",
-  withCredentials: true,
-});
+import API from "../../api/axios";
 
 const navItems = [
   { label: "Dashboard", icon: "dashboard", to: "/InvestorDashboard" },
@@ -126,7 +121,7 @@ export default function Wallet() {
       setLoadingWallet(true);
       setErrorMessage("");
 
-      const res = await api.get("/company/mywallet");
+      const res = await API.get("/company/mywallet");
 
       setWallet(res.data.wallet || null);
     } catch (error) {
@@ -142,7 +137,7 @@ export default function Wallet() {
       setLoadingTransactions(true);
       setErrorMessage("");
 
-      const res = await api.get("/transactions/mytransactions");
+      const res = await API.get("/transactions/mytransactions");
 
       setTransactions(res.data.transactions || []);
     } catch (error) {
@@ -216,7 +211,7 @@ export default function Wallet() {
           ? "/transactions/deposit"
           : "/transactions/withdraw";
 
-      await api.post(route, body);
+      await API.post(route, body);
 
       setFundSuccess(
         fundForm.type === "DEPOSIT"

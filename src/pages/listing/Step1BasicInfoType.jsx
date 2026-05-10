@@ -105,8 +105,7 @@ function createSlug(name) {
 
 function getSavedDraft() {
   try {
-    const saved =
-      localStorage.getItem(STORAGE_KEY) || localStorage.getItem(OLD_STORAGE_KEY);
+    const saved = localStorage.getItem(STORAGE_KEY);
 
     if (!saved) return defaultListingData;
 

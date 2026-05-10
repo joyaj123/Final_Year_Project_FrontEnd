@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import API from "../../api/axios";
 
 
 const STORAGE_KEY = "listingWizardData";
+const OLD_STORAGE_KEY = "listingWizardDraft";
 
 const documentDefinitions = [
   {
@@ -265,8 +265,11 @@ export default function Step6DocumentsMetricsStyled() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fileInputRefs = useRef({});
+  const skipAutoSaveRef = useRef(false);
 
   useEffect(() => {
+    if (skipAutoSaveRef.current) return;
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
   }, [formData]);
 
@@ -632,46 +635,46 @@ export default function Step6DocumentsMetricsStyled() {
         isListing: true,
       };
 
-      console.log("Payload sent to backend:", payload);
+      await API.post("/company/listing", payload, {
+        withCredentials: true,
+      });
 
-      const response = await API.post(
-        `/company/listing`,
-        payload,
-        {
-          withCredentials: true,
-        }
-      );
+      skipAutoSaveRef.current = true;
 
-      setFormData(nextData);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(nextData));
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(OLD_STORAGE_KEY);
+      setFormData(defaultListingData);
+      setErrors({});
 
       setSubmitMessage("Listing submitted successfully.");
-      console.log("Created listing:", response.data);
+      setTimeout(() => {
+        navigate("/");
+      }, 1800);
+
     } catch (error) {
-  console.error("Submit listing error:", error);
-  console.error("Axios message:", error.message);
-  console.error("Backend status:", error.response?.status);
-  console.error("Backend data:", error.response?.data);
+      console.error("Submit listing error:", error);
+      console.error("Axios message:", error.message);
+      console.error("Backend status:", error.response?.status);
+      console.error("Backend data:", error.response?.data);
 
-  const backendErrors = error.response?.data?.errors;
+      const backendErrors = error.response?.data?.errors;
 
-  if (Array.isArray(backendErrors)) {
-    setSubmitMessage(backendErrors.join(", "));
-  } else if (error.response?.data?.message || error.response?.data?.error) {
-    setSubmitMessage(
-      `${error.response?.data?.message || ""} ${
-        error.response?.data?.error || ""
-      }`
-    );
-  } else if (error.message === "Network Error") {
-    setSubmitMessage(
-      "Network Error: backend not reachable, CORS problem, or wrong API URL."
-    );
-  } else {
-    setSubmitMessage(error.message || "Failed to submit listing.");
-  }
-}
- finally {
+      if (Array.isArray(backendErrors)) {
+        setSubmitMessage(backendErrors.join(", "));
+      } else if (error.response?.data?.message || error.response?.data?.error) {
+        setSubmitMessage(
+          `${error.response?.data?.message || ""} ${
+            error.response?.data?.error || ""
+          }`
+        );
+      } else if (error.message === "Network Error") {
+        setSubmitMessage(
+          "Network Error: backend not reachable, CORS problem, or wrong API URL."
+        );
+      } else {
+        setSubmitMessage(error.message || "Failed to submit listing.");
+      }
+    } finally {
       setIsSubmitting(false);
     }
   };

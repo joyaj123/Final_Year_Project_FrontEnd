@@ -6,10 +6,9 @@ const STORAGE_KEY = "onboardingData";
 const defaultOnboardingData = {
   investorType: "INDIVIDUAL",
   riskTolerance: "",
-  investmentPreferences: {
-    minAmount: "",
-    maxAmount: "",
-    currency: "USD",
+  investmentSweetSpot: {
+    min: "",
+    max: "",
   },
 
   kyc: {
@@ -56,9 +55,9 @@ function getSavedOnboardingData() {
     return {
       ...defaultOnboardingData,
       ...parsed,
-      investmentPreferences: {
-        ...defaultOnboardingData.investmentPreferences,
-        ...(parsed.investmentPreferences || {}),
+      investmentSweetSpot: {
+        ...defaultOnboardingData.investmentSweetSpot,
+        ...(parsed.investmentSweetSpot || {}),
       },
       kyc: {
         ...defaultOnboardingData.kyc,
