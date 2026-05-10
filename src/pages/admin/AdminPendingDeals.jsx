@@ -55,6 +55,7 @@ function Icon({ name, className = "", filled = false, weight = 400 }) {
 export default function PendingDealsReview() {
   const [pendingDeals,setPendingDeals]=useState([]);
   const [selectedDeal, setSelectedDeal] = useState(null);
+  const [notes, setNotes] = useState("");
   useEffect(()=>{
   const fetchDeals=async()=>{
     try{
@@ -77,7 +78,7 @@ const handleDecision =async(dealId,decision)=>{
       `/deals/${dealId}/decision`,
       {
         decision,
-        notes:"",
+        notes,
       },
       {
           withCredentials: true,
@@ -218,6 +219,8 @@ const handleDecision =async(dealId,decision)=>{
 
         <textarea
           rows={4}
+          value={notes}
+          onChange={(e)=>setNotes(e.target.value)}
           placeholder="Add review notes..."
           className="w-full border rounded-xl p-3 text-sm"
         />
