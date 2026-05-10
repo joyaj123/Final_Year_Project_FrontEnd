@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect,useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import API from "../../api/axios";
 const navItems = [
   { icon: "dashboard", label: "Dashboard",path:"/admin-dashboard", active: false },
   { icon: "handshake", label: "Pending Deals",path:"/pending-deals", active: false },
@@ -28,10 +29,11 @@ function Icon({ name, className = "", filled = false, weight = 400 }) {
 export default function AdminPendingCompanies() {
   const [companies,setCompanies]=useState([]);
   const [selectedCompany,setSelectedCompany]=useState(null);
+  const [showNote, setShowNote] = useState(true);
   useEffect(()=>{
     const fetchCompanies = async()=>{
       try{
-        const res = await axios.get("http://localhost:5000/company");
+        const res = await API.get("/company");
 
         const pending=res.data.filter(
           (c) => c.status !== "APPROVED" && c.status !== "REJECTED"
@@ -42,17 +44,17 @@ export default function AdminPendingCompanies() {
           setSelectedCompany(pending[0]);
         }
       }catch(err){
-       toast.error("FULL ERROR:", err);
-      toast.error("RESPONSE DATA:", err.response?.data);
-      toast.error("STATUS:", err.response?.status);
+       console.error("FULL ERROR:", err);
+      console.error("RESPONSE DATA:", err.response?.data);
+      console.error("STATUS:", err.response?.status);
       }
     };
     fetchCompanies();
   },[]);
   const handleReview = async (id, decision) => {
   try {
-    const res = await axios.put(
-      `http://localhost:5000/company/${id}/decision`,
+    const res = await API.put(
+      `/company/${id}/decision`,
       {
         decision,
         notes:"" // "approve" or "reject"
@@ -62,6 +64,8 @@ export default function AdminPendingCompanies() {
       }
     );
     setCompanies((prev) => prev.filter((c) => c._id !== id));
+    setSelectedCompany(null);
+    setShowNote(false);
     if (decision === "approve") {
       toast.success("Company Approved successfully ");
     } else {
@@ -69,7 +73,7 @@ export default function AdminPendingCompanies() {
     }
 
   } catch (err) {
-    toast.error("Review error:", err);
+   toast.error(err.response?.data?.message || err.message);
     if (err.response) {
     alert(err.response.data.message); 
   } else {
@@ -342,7 +346,7 @@ export default function AdminPendingCompanies() {
                 {/* Actions */}
                 <div className="p-8 bg-surface-container/50 border-t border-surface-container-high">
                   <div className="flex flex-col gap-6">
-                    <div>
+                    {showNote && (<div>
                       <label className="block text-sm font-bold text-primary mb-2">
                         Internal Verification Note
                       </label>
@@ -351,6 +355,7 @@ export default function AdminPendingCompanies() {
                         className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-primary/20 outline-none min-h-[100px] resize-none"
                       />
                     </div>
+  )}
 
                     <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
                       <div className="flex flex-col sm:flex-row gap-3">
