@@ -8,7 +8,7 @@ const navItems = [
   { label: "Dashboard", icon: "dashboard", to: "/company-dashboard" },
   { label: "My Deals", icon: "handshake", to: "/company-deals", active: true },
   { label: "Distributions", icon: "payments", to: "/company-distributions" },
-  { label: "Wallet", icon: "account_balance_wallet", href: "#" },
+  { label: "Wallet", icon: "account_balance_wallet", to: "/company-wallet" },
   { label: "Profile", icon: "person", to:"/profile" },
 ];
 
