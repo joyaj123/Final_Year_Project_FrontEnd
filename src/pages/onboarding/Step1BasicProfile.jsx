@@ -492,7 +492,7 @@ export default function Step1BasicProfile() {
                         </span>
                       </div>
 
-                      {errors.minAmount && (
+                      {errors.min && (
                         <p className="text-sm text-error">
                           {errors.min}
                         </p>
@@ -529,7 +529,7 @@ export default function Step1BasicProfile() {
                         </span>
                       </div>
 
-                      {errors.maxAmount && (
+                      {errors.max && (
                         <p className="text-sm text-error">
                           {errors.max}
                         </p>
