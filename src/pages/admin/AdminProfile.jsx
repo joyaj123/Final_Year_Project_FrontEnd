@@ -151,16 +151,6 @@ export default function AdminProfile() {
             </Link>
           ))}
         </nav>
-
-        <div className="mt-auto border-t border-slate-200/50 pt-4">
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-            href="#"
-          >
-            <Icon name="logout" />
-            <span className="font-medium text-sm">Log Out</span>
-          </a>
-        </div>
       </aside>
 
       {/* Main */}

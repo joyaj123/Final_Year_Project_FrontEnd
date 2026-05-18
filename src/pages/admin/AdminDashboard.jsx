@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import API from "../../api/axios";
+import { Link , useNavigate } from "react-router-dom";
 
 const navItems = [
   {
@@ -59,12 +59,26 @@ function Icon({ name, className = "", filled = false, weight = 400 }) {
 }
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalUsers: 0,
     activeDeals: 0,
     pendingKyc: 0,
     pendingCompanies: 0,
   });
+
+  const handleLogout = async () => {
+  try {
+    await API.post("/users/logout", {}, { withCredentials: true });
+  } catch (err) {
+    console.log("Logout backend error:", err);
+  }
+
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+
+  navigate("/", { replace: true });
+};
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -131,14 +145,14 @@ export default function AdminDashboard() {
           ))}
         </nav>
 
-        <div className="mt-auto border-t border-slate-200/50 pt-4">
-          <a
-            className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
-            href="#"
+       <div className="mt-auto border-t border-slate-200/50 pt-4">
+          <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
           >
-            <Icon name="logout" />
-            <span className="font-medium text-sm">Log Out</span>
-          </a>
+          <span className="material-symbols-outlined">logout</span>
+          <span className="font-medium text-sm">Log Out</span>
+          </button>
         </div>
       </aside>
 
