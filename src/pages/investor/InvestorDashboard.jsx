@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import API from "../../api/axios";
 
 export default function Dashboard() {
@@ -10,7 +10,8 @@ export default function Dashboard() {
     totalInvested: 0,
     totalReturns: 0,
   });
-
+  
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   const getNumber = (value) => {
@@ -89,6 +90,19 @@ export default function Dashboard() {
     return Math.min(Math.round((balance / total) * 100), 100);
   }, [balance, totalInvested, totalReturns]);
 
+  const handleLogout = async () => {
+  try {
+    await API.post("/users/logout", {}, { withCredentials: true });
+  } catch (err) {
+    console.log("Logout backend error:", err);
+  }
+
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+
+  navigate("/", { replace: true });
+};
+
   return (
     <div className="bg-surface text-on-surface flex">
       <aside className="h-screen w-64 border-r border-slate-200 bg-[#f3f4f6] flex flex-col p-4 gap-2 shrink-0">
@@ -155,10 +169,14 @@ export default function Dashboard() {
           </Link>
         </nav>
 
+        
         <div className="mt-auto border-t border-slate-200/50 pt-4">
-          <button className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg">
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-medium text-sm">Log Out</span>
+          <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 transition-transform duration-200 rounded-lg"
+          >
+          <span className="material-symbols-outlined">logout</span>
+          <span className="font-medium text-sm">Log Out</span>
           </button>
         </div>
       </aside>
