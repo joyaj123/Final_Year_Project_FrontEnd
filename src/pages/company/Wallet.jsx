@@ -81,15 +81,55 @@ const getTransactionIcon = (type) => {
   }
 };
 
-const getAmountColor = (type) => {
-  if (type === "DEPOSIT" || type === "DISTRIBUTION") return "text-secondary";
-  if (type === "WITHDRAWAL" || type === "INVESTMENT") return "text-error";
+
+
+const getAmountColor = (item) => { //////////////////////
+  if (
+    item.type === "DISTRIBUTION" &&
+    item.senderType === "COMPANY"
+  )
+    return "text-error"; //////////////////////
+
+  if (
+    item.type === "DISTRIBUTION" &&
+    item.receiverType === "COMPANY"
+  )
+    return "text-secondary"; //////////////////////
+
+  if (item.type === "DEPOSIT")
+    return "text-secondary";
+
+  if (
+    item.type === "WITHDRAWAL" ||
+    item.type === "INVESTMENT"
+  )
+    return "text-error";
+
   return "text-primary";
 };
 
-const getAmountPrefix = (type) => {
-  if (type === "DEPOSIT" || type === "DISTRIBUTION") return "+";
-  if (type === "WITHDRAWAL" || type === "INVESTMENT") return "-";
+const getAmountPrefix = (item) => { //////////////////////
+  if (
+    item.type === "DISTRIBUTION" &&
+    item.senderType === "COMPANY"
+  )
+    return "-"; //////////////////////
+
+  if (
+    item.type === "DISTRIBUTION" &&
+    item.receiverType === "COMPANY"
+  )
+    return "+"; //////////////////////
+
+  if (item.type === "DEPOSIT")
+    return "+";
+
+  if (
+    item.type === "WITHDRAWAL" ||
+    item.type === "INVESTMENT"
+  )
+    return "-";
+
   return "";
 };
 

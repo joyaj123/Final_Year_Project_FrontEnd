@@ -1,8 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios"; ////////// BACKEND
 import API from "../../api/axios";
-
 
 const today = new Date().toLocaleDateString("en-US", {
   year: "numeric",
@@ -10,16 +8,10 @@ const today = new Date().toLocaleDateString("en-US", {
   day: "numeric",
 });
 
-
 const distributionTypes = [
   { key: "DIVIDEND", label: "DIVIDEND", icon: "account_balance_wallet" },
   { key: "REVENUE_SHARE", label: "REVENUE SHARE", icon: "analytics" },
   { key: "SPECIAL_LIQUIDITY", label: "SPECIAL LIQUIDITY", icon: "water_drop" },
-];
-
-const currencies = [
-  { label: "USD - United States Dollar", value: "USD" },
-
 ];
 
 const navItems = [
@@ -28,10 +20,6 @@ const navItems = [
   { label: "Distributions", icon: "payments", to: "/company-distributions", active: true },
   { label: "Wallet", icon: "account_balance_wallet", to: "/company-wallet" },
   { label: "Profile", icon: "person", to: "/profile" },
-];
-
-const investors = [
-  { name: "Investor payouts will be calculated by backend", equity: 100, verified: true },
 ];
 
 const formatMoney = (value, currency = "USD") => {
@@ -46,15 +34,40 @@ const formatMoney = (value, currency = "USD") => {
 
 export default function CreateDistributionPage() {
   const [formData, setFormData] = useState({
+    dealId: "",
     distributionType: "DIVIDEND",
     totalAmount: "",
     currency: "USD",
   });
 
+  const [deals, setDeals] = useState([]);
+  const [loadingDeals, setLoadingDeals] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [createdDistribution, setCreatedDistribution] = useState(null);
+
+  useEffect(() => {
+    const fetchCompanyDeals = async () => {
+      try {
+        setLoadingDeals(true);
+
+        const res = await API.get("/company/funded-deals");
+
+        setDeals(res.data.deals || res.data || []);
+      } catch (error) {
+        console.log("FETCH DEALS ERROR:", error);
+        setErrorMessage("Could not load company deals.");
+      } finally {
+        setLoadingDeals(false);
+      }
+    };
+
+    fetchCompanyDeals();
+  }, []);
+
+  const selectedDeal = deals.find((deal) => deal._id === formData.dealId);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,11 +84,15 @@ export default function CreateDistributionPage() {
   const totalAmountNumber = Number(formData.totalAmount || 0);
 
   const investorPayouts = useMemo(() => {
-    return investors.map((investor) => ({
-      ...investor,
-      payout: totalAmountNumber,
-    }));
-  }, [totalAmountNumber]);
+    return [
+      {
+        name: selectedDeal
+          ? `Payouts for: ${selectedDeal.title || selectedDeal.name}`
+          : "Select a deal to calculate payouts",
+        payout: totalAmountNumber,
+      },
+    ];
+  }, [totalAmountNumber, selectedDeal]);
 
   const handleCreateDistribution = async () => {
     try {
@@ -84,41 +101,43 @@ export default function CreateDistributionPage() {
       setSuccessMessage("");
       setCreatedDistribution(null);
 
+      if (!formData.dealId) {
+        setErrorMessage("Please select the deal you want to distribute revenue for.");
+        return;
+      }
+
       if (!formData.totalAmount || Number(formData.totalAmount) <= 0) {
         setErrorMessage("Please enter a valid total amount.");
         return;
       }
 
       const body = {
+        dealId: formData.dealId,
         totalAmount: Number(formData.totalAmount),
         type: formData.distributionType,
         currency: formData.currency,
       };
 
-          const res = await API.post(
-      "/distributions/createdistribution", ////////// CREATE DISTRIBUTION ROUTE
-      body ////////// BACKEND BODY
-    );
-
+      const res = await API.post("/distributions/createdistribution", body);
 
       setCreatedDistribution(res.data.distribution);
       setSuccessMessage(res.data.message || "Distribution created successfully.");
 
       setFormData({
+        dealId: "",
         distributionType: "DIVIDEND",
         totalAmount: "",
         currency: "USD",
       });
     } catch (error) {
-  console.log("FULL ERROR:", error);
-  console.log("BACKEND RESPONSE:", error.response?.data);
+      console.log("FULL ERROR:", error);
+      console.log("BACKEND RESPONSE:", error.response?.data);
 
-  setErrorMessage(
-    error.response?.data?.message ||
-    error.message ||
-    "Something went wrong while creating the distribution."
-  );
-
+      setErrorMessage(
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong while creating the distribution."
+      );
     } finally {
       setLoading(false);
     }
@@ -162,10 +181,6 @@ export default function CreateDistributionPage() {
             </Link>
           ))}
         </nav>
-
-        <div className="mt-auto border-t border-slate-200/50 pt-4">
-        
-        </div>
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0">
@@ -193,13 +208,13 @@ export default function CreateDistributionPage() {
                   Create Distribution
                 </h1>
                 <p className="text-on-surface-variant text-base md:text-lg font-medium mt-2">
-                  Create an instant payout distribution for active investors.
+                  Select a funded deal and distribute revenue to its investors.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-4">
                 <Link
-                  to="/company-distributions" ////////// ROUTE
+                  to="/company-distributions"
                   className="px-6 py-3 rounded-xl border border-outline-variant/30 text-on-surface font-semibold hover:bg-surface-container transition-colors"
                 >
                   Cancel
@@ -238,6 +253,30 @@ export default function CreateDistributionPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="md:col-span-2">
                       <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">
+                        Select Deal
+                      </label>
+
+                      <select
+                        name="dealId"
+                        value={formData.dealId}
+                        onChange={handleChange}
+                        disabled={loadingDeals}
+                        className="w-full bg-surface-container border-none rounded-xl py-4 px-4 font-bold focus:ring-2 focus:ring-primary focus:bg-white transition-all disabled:opacity-60"
+                      >
+                        <option value="">
+                          {loadingDeals ? "Loading deals..." : "Choose a deal"}
+                        </option>
+
+                        {deals.map((deal) => (
+                          <option key={deal._id} value={deal._id}>
+                            {deal.title || deal.name || `Deal ${deal._id}`}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">
                         Distribution Type
                       </label>
 
@@ -274,7 +313,9 @@ export default function CreateDistributionPage() {
 
                               <span
                                 className={`text-xs font-bold ${
-                                  active ? "text-primary" : "text-on-surface-variant"
+                                  active
+                                    ? "text-primary"
+                                    : "text-on-surface-variant"
                                 }`}
                               >
                                 {type.label}
@@ -313,14 +354,13 @@ export default function CreateDistributionPage() {
                       </label>
 
                       <select
-  name="currency"
-  value={formData.currency}
-  disabled
-  className="w-full bg-surface-container border-none rounded-xl py-4 px-4 font-bold opacity-70 cursor-not-allowed"
->
-  <option value="USD">USD</option>
-  <option value="EUR">EUR</option>
-</select>
+                        name="currency"
+                        value={formData.currency}
+                        disabled
+                        className="w-full bg-surface-container border-none rounded-xl py-4 px-4 font-bold opacity-70 cursor-not-allowed"
+                      >
+                        <option value="USD">USD</option>
+                      </select>
                     </div>
 
                     <div>
@@ -370,7 +410,8 @@ export default function CreateDistributionPage() {
                     </div>
 
                     <p className="mt-5 text-sm text-white/80 font-medium leading-relaxed">
-                      The backend will automatically split this amount based on each active investor ownership percentage.
+                      The backend will split this amount only between investors
+                      who own shares in the selected deal.
                     </p>
                   </div>
                 </div>
@@ -382,7 +423,7 @@ export default function CreateDistributionPage() {
                     </h4>
 
                     <span className="text-xs font-bold text-on-surface-variant bg-surface-variant px-3 py-1 rounded-full">
-                      Auto
+                      Deal-Based
                     </span>
                   </div>
 
@@ -404,7 +445,7 @@ export default function CreateDistributionPage() {
                               {investor.name}
                             </div>
                             <div className="text-xs text-on-surface-variant font-medium">
-                              Active ownerships only
+                              Active ownerships for selected deal only
                             </div>
                           </div>
                         </div>
@@ -432,7 +473,7 @@ export default function CreateDistributionPage() {
                     )}
 
                     <Link
-                      to="/company-distributions" ////////// ROUTE
+                      to="/company-distributions"
                       className="block text-center w-full py-4 text-sm font-bold text-on-primary-container border-2 border-dashed border-outline-variant rounded-2xl hover:border-primary hover:text-primary transition-all"
                     >
                       View All Distributions
@@ -453,7 +494,9 @@ export default function CreateDistributionPage() {
                       Backend Check
                     </div>
                     <p className="text-xs text-on-secondary-fixed-variant leading-relaxed mt-1">
-                      Your backend checks company balance, active ownerships, investor wallets, transactions, and then saves the distribution.
+                      The backend checks the selected deal, company balance,
+                      active ownerships for that deal, investor wallets,
+                      transactions, and then saves the distribution.
                     </p>
                   </div>
                 </div>
