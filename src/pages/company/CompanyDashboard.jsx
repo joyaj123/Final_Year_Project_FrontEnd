@@ -21,7 +21,7 @@ export default function BusinessDashboard() {
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const res = await API.get("/deals/activedeals", {
+        const res = await API.get("/deals/myactivedeals", {
           withCredentials: true,
         });
         console.log("DEALS FROM BACKEND:", res.data.deals);
