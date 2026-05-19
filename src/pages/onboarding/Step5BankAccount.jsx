@@ -69,9 +69,9 @@ function getSavedOnboardingData() {
         ...defaultOnboardingData.company,
         ...(parsed.company || {}),
       },
-      bankAccount: {
-        ...defaultOnboardingData.bankAccount,
-        ...(parsed.bankAccount || {}),
+      bankAccounts: {
+        ...defaultOnboardingData.bankAccounts,
+        ...(parsed.bankAccounts || {}),
       },
       preferences: {
         ...defaultOnboardingData.preferences,
@@ -128,10 +128,10 @@ function buildPayload(formData) {
           }
         : undefined,
 
-    bankAccount: {
-      bankName: formData.bankAccount.bankName,
-      accountNumber: formData.bankAccount.accountNumber,
-      isPrimary: Boolean(formData.bankAccount.isPrimary),
+    bankAccounts: {
+      bankName: formData.bankAccounts.bankName,
+      accountNumber: formData.bankAccounts.accountNumber,
+      isPrimary: Boolean(formData.bankAccounts.isPrimary),
     },
 
     preferences: formData.preferences,
@@ -154,8 +154,8 @@ export default function Step5BankAccount() {
   const handleBankChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
-      bankAccount: {
-        ...prev.bankAccount,
+      bankAccounts: {
+        ...prev.bankAccounts,
         [field]: value,
       },
     }));
@@ -164,11 +164,11 @@ export default function Step5BankAccount() {
   const validateStep = () => {
     const newErrors = {};
 
-    if (!formData.bankAccount.bankName.trim()) {
+    if (!formData.bankAccounts.bankName.trim()) {
       newErrors.bankName = "Bank name is required.";
     }
 
-    if (!formData.bankAccount.accountNumber.trim()) {
+    if (!formData.bankAccounts.accountNumber.trim()) {
       newErrors.accountNumber = "Account number is required.";
     }
 
@@ -355,7 +355,7 @@ export default function Step5BankAccount() {
                         </label>
                         <input
                           type="text"
-                          value={formData.bankAccount.bankName}
+                          value={formData.bankAccounts.bankName}
                           onChange={(e) =>
                             handleBankChange("bankName", e.target.value)
                           }
@@ -375,7 +375,7 @@ export default function Step5BankAccount() {
                         </label>
                         <input
                           type="text"
-                          value={formData.bankAccount.accountNumber}
+                          value={formData.bankAccounts.accountNumber}
                           onChange={(e) =>
                             handleBankChange("accountNumber", e.target.value)
                           }
@@ -414,7 +414,7 @@ export default function Step5BankAccount() {
                         <input
                           type="checkbox"
                           className="sr-only peer"
-                          checked={formData.bankAccount.isPrimary}
+                          checked={formData.bankAccounts.isPrimary}
                           onChange={(e) =>
                             handleBankChange("isPrimary", e.target.checked)
                           }

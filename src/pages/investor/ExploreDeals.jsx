@@ -320,6 +320,10 @@ export default function ExploreDeals() {
                               deal.companyId?.details?.logoUrl ||
                               DEFAULT_IMAGE
                             }
+                             onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = DEFAULT_IMAGE;
+                            }}
                           />
 
                           <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
