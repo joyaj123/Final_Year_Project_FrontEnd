@@ -21,7 +21,7 @@ export default function BusinessDashboard() {
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const res = await API.get("/deals/mydeals", {
+        const res = await API.get("/deals/activedeals", {
           withCredentials: true,
         });
         console.log("DEALS FROM BACKEND:", res.data.deals);
@@ -180,9 +180,9 @@ const handleLogout = async () => {
             </div>
 
             <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0_8px_32px_rgba(24,28,30,0.04)] flex flex-col gap-1 border border-outline-variant/5">
-              <span className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider">
-                {deals.length} Active Deals
-              </span>
+              <span className="text-on-surface-variant text-base font-semibold uppercase tracking-wider">
+  {deals.length} Active Deals
+</span>
               <div className="flex items-baseline gap-2 mt-2"></div>
               <div className="mt-4 flex gap-1">
                 <div className="h-1 flex-1 bg-secondary rounded-full"></div>
@@ -367,14 +367,12 @@ const handleLogout = async () => {
                   <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                     Asset Name
                   </th>
-                  <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-                    Status
-                  </th>
+                 
                   <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                     Utilization %
                   </th>
                   <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-                    Projected IRR
+                    Amount Raised 
                   </th>
                   <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                     Investor Count
@@ -403,9 +401,7 @@ const handleLogout = async () => {
                         </p>
                       </td>
 
-                      <td className="px-8 py-6 text-sm font-medium">
-                        {deal.status}
-                      </td>
+                     
 
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
